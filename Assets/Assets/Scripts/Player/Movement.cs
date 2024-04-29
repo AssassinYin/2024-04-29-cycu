@@ -45,9 +45,6 @@ public class Movement : MonoBehaviour
     private bool _dashRefilling;
     private Vector2 _lastDashDir;
     private bool _isDashAttacking;
-
-    //attack
-    private bool _attackRefilling;
     #endregion STATE PARAMETERS
 
     #region INPUT PARAMETERS
@@ -566,13 +563,6 @@ public class Movement : MonoBehaviour
 
         //attack over
         IsAttacking = false;
-    }
-    //short period before the player is able to attack again.
-    private IEnumerator RefillAttack()
-    {
-        _attackRefilling = true;
-        yield return new WaitForSeconds(Data.attackRefillTime);
-        _attackRefilling = false;
     }
     private void ApplyReactionForce(Vector2 dir)
     {
