@@ -45,6 +45,9 @@ public class Movement : MonoBehaviour
     private bool _dashRefilling;
     private Vector2 _lastDashDir;
     private bool _isDashAttacking;
+
+    //attack
+    private bool _attackRefilling;
     #endregion STATE PARAMETERS
 
     #region INPUT PARAMETERS
@@ -85,7 +88,6 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
-        PlayerInput = GetComponent<PlayerInput>();
     }
 
     private void Start()
@@ -140,7 +142,7 @@ public class Movement : MonoBehaviour
             }
 
             //left wall Check
-            else if(((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
+            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
                 || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
             {
                 LastOnWallLeftTime = Data.coyoteTime;
@@ -153,7 +155,10 @@ public class Movement : MonoBehaviour
         #endregion COLLISION CHECKS
 
         #region ATTACK CHECKS
-        if (!IsDashing && LastPressedAttackTime > 0)
+        if (!IsAttacking && !_attackRefilling)
+            StartCoroutine(nameof(RefillAttack), 1);
+
+        else if (!IsDashing && LastPressedAttackTime > 0)
         {
             IsAttacking = true;
             StartCoroutine(nameof(StartAttack));
@@ -208,7 +213,7 @@ public class Movement : MonoBehaviour
             //if not direction pressed, dash forward.
             if (MoveInput != Vector2.zero)
                 if (Data.doLimitedDashDir)
-                    _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y))? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
+                    _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
 
                 else
                     _lastDashDir = MoveInput;
@@ -339,19 +344,23 @@ public class Movement : MonoBehaviour
     #region INPUT CALLBACKS
     //methods handle input detected in Update() or unity event
     public void OnMoveInput(InputAction.CallbackContext context) => MoveInput = context.ReadValue<Vector2>();
-    public void OnJumpInput()
+    public void OnJumpInput(InputAction.CallbackContext context)
     {
-        if (PlayerInput.actions["Jump"].WasPressedThisFrame())
+        if (context.action.WasPressedThisFrame())
             LastPressedJumpTime = Data.jumpInputBufferTime;
 
-        else if (PlayerInput.actions["Jump"].WasReleasedThisFrame())
+        else if (context.action.WasReleasedThisFrame())
             OnJumpUpInput();
     }
     public void OnJumpUpInput() => _isJumpCut = (CanJumpCut() || CanWallJumpCut());
-    public void OnDashInput() => LastPressedDashTime = Data.dashInputBufferTime;
-    public void OnAttackInput()
+    public void OnDashInput(InputAction.CallbackContext context)
     {
-        if (PlayerInput.actions["Attack"].WasPressedThisFrame())
+        if (context.action.WasPressedThisFrame())
+            LastPressedDashTime = Data.dashInputBufferTime;
+    }
+    public void OnAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.action.WasPressedThisFrame())
             LastPressedAttackTime = Data.attackInputBufferTime;
     }
     #endregion INPUT CALLBACKS
@@ -440,7 +449,8 @@ public class Movement : MonoBehaviour
         //clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
         //force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called
         //more detail in how force are applied to rigidbodies
-        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime), Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
+        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime),
+                                          Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
 
         Rigidbody.AddForce(movement * Vector2.up);
     }
@@ -564,42 +574,25 @@ public class Movement : MonoBehaviour
         //attack over
         IsAttacking = false;
     }
+    //short period before the player is able to attack again.
+    private IEnumerator RefillAttack()
+    {
+        _attackRefilling = true;
+        yield return new WaitForSeconds(Data.attackRefillTime);
+        _attackRefilling = false;
+    }
     private void ApplyReactionForce(Vector2 dir)
     {
-        //increase the force applied if falling, will always feel like jump same amount.
+        //increase the force applied if falling
         float force = Data.jumpForce;
         if (Rigidbody.velocity.y < 0)
             force -= Rigidbody.velocity.y;
-        //propels the player upwards by the amount of upwardsForce
+        //propels the player upwards by the amount of jumpForce
         Rigidbody.AddForce(-(dir * force), ForceMode2D.Impulse);
-
-        /*
-        //applies force in the appropriate direction based on the amount of force from the attack
-        //if the attack was in a downward direction
-        if (Attack.IsDownwardStrike)
-        {
-            //increase the force applied if falling, will always feel like jump same amount.
-            float force = Data.jumpForce;
-            if (Rigidbody.velocity.y < 0)
-                force -= Rigidbody.velocity.y;
-            //propels the player upwards by the amount of upwardsForce
-            Rigidbody.AddForce(-(Attack.Dir * force), ForceMode2D.Impulse);
-        }
-        else
-        {
-            //increase the force applied if falling, will always feel like jump same amount.
-            float force = Data.jumpForce;
-            if (Rigidbody.velocity.y < 0)
-                force -= Rigidbody.velocity.y;
-            //propels the player upwards by the amount of defaultForce
-            Rigidbody.AddForce(-(Attack.Dir * force), ForceMode2D.Impulse);
-        }
-        */
     }
     #endregion
 
     #region CHECK METHODS
-    public bool IsOnGround() => Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer);
     public void CheckDirectionToFace(bool isMovingRight)
     {
         if (isMovingRight != IsFacingRight)
