@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     //scriptable object which holds all the player's movement parameters.
     public PlayerData Data;
@@ -344,6 +344,7 @@ public class Movement : MonoBehaviour
     #region INPUT CALLBACKS
     //methods handle input detected in Update() or unity event
     public void OnMoveInput(InputAction.CallbackContext context) => MoveInput = context.ReadValue<Vector2>();
+
     public void OnJumpInput(InputAction.CallbackContext context)
     {
         if (context.action.WasPressedThisFrame())
@@ -352,12 +353,15 @@ public class Movement : MonoBehaviour
         else if (context.action.WasReleasedThisFrame())
             OnJumpUpInput();
     }
+
     public void OnJumpUpInput() => _isJumpCut = (CanJumpCut() || CanWallJumpCut());
+
     public void OnDashInput(InputAction.CallbackContext context)
     {
         if (context.action.WasPressedThisFrame())
             LastPressedDashTime = Data.dashInputBufferTime;
     }
+
     public void OnAttackInput(InputAction.CallbackContext context)
     {
         if (context.action.WasPressedThisFrame())
@@ -367,7 +371,9 @@ public class Movement : MonoBehaviour
 
     #region GENERAL METHODS
     public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
+
     private void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
+
     private IEnumerator PerformSleep(float duration)
     {
         Time.timeScale = 0;
@@ -424,6 +430,7 @@ public class Movement : MonoBehaviour
         // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / Rigidbody.mass, Rigidbody.velocity.y);
         // Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second.
     }
+
     private void Turn()
     {
         //Stores scale and flips the player with y rotation.
@@ -440,6 +447,7 @@ public class Movement : MonoBehaviour
         IsFacingRight = !IsFacingRight;
         CameraCenter.CallTurn();
     }
+
     private void Slide()
     {
         //works the same as the Run but only in the y-axis
@@ -472,6 +480,7 @@ public class Movement : MonoBehaviour
         Rigidbody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         #endregion
     }
+
     private void WallJump(int dir)
     {
         //ensures can't call wall Jump multiple times from one press
@@ -497,6 +506,7 @@ public class Movement : MonoBehaviour
         Rigidbody.AddForce(force, ForceMode2D.Impulse);
         #endregion
     }
+
     private void ExtraJumpReset() => currentExtraJump = Data.extraJump; //reset extra jump
     #endregion JUMP METHODS
 
@@ -536,6 +546,7 @@ public class Movement : MonoBehaviour
         //dash over
         IsDashing = false;
     }
+
     //short period before the player is able to dash again.
     private IEnumerator RefillDash()
     {
@@ -574,6 +585,7 @@ public class Movement : MonoBehaviour
         //attack over
         IsAttacking = false;
     }
+
     //short period before the player is able to attack again.
     private IEnumerator RefillAttack()
     {
@@ -581,6 +593,7 @@ public class Movement : MonoBehaviour
         yield return new WaitForSeconds(Data.attackRefillTime);
         _attackRefilling = false;
     }
+
     private void ApplyReactionForce(Vector2 dir)
     {
         //increase the force applied if falling
@@ -590,6 +603,11 @@ public class Movement : MonoBehaviour
         //propels the player upwards by the amount of jumpForce
         Rigidbody.AddForce(-(dir * force), ForceMode2D.Impulse);
     }
+
+    private void Block()
+    {
+
+    }
     #endregion
 
     #region CHECK METHODS
@@ -598,12 +616,18 @@ public class Movement : MonoBehaviour
         if (isMovingRight != IsFacingRight)
             Turn();
     }
+
     private bool CanSlide() => (LastOnWallTime > 0 && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0);
+
     private bool CanJump() => LastOnGroundTime > 0 && !IsJumping;
+
     private bool CanWallJump() => LastPressedJumpTime > 0 && LastOnWallTime > 0 && LastOnGroundTime <= 0 &&
         (!IsWallJumping || (LastOnWallRightTime > 0 && _lastWallJumpDir == 1) || (LastOnWallLeftTime > 0 && _lastWallJumpDir == -1));
+
     private bool CanJumpCut() => IsJumping && Rigidbody.velocity.y > 0;
+
     private bool CanWallJumpCut() => IsWallJumping && Rigidbody.velocity.y > 0;
+
     private bool CanDash()
     {
         if (!IsDashing && _dashesLeft < Data.dashAmount && LastOnGroundTime > 0 && !_dashRefilling)

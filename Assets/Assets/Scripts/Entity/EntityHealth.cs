@@ -12,6 +12,12 @@ public class EntityHealth : MonoBehaviour
 
     private bool _inInvulnerableFrame;
     private int _currentHealth;
+    private Rigidbody2D _rigidbody;
+
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
@@ -19,7 +25,7 @@ public class EntityHealth : MonoBehaviour
         _currentHealth = healthAmount;
     }
 
-    public void Damage(int amount)
+    public void ApplyDamage(int amount)
     {
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
         if (!_inInvulnerableFrame)
@@ -37,6 +43,12 @@ public class EntityHealth : MonoBehaviour
                 StartCoroutine(StartInvulnerableFrame());
         }
     }
+
+    public void ApplyKnockback(Vector2 dir)
+    {
+        _rigidbody.AddForce(-dir, ForceMode2D.Impulse);
+    }
+
     private IEnumerator StartInvulnerableFrame()
     {
         //wait for the amount of invulnerableFrame
