@@ -10,10 +10,13 @@ public class Bottons : MonoBehaviour
 {
     
     [SerializeField] GameObject chooseData;
+    [SerializeField] GameObject menuBottons;
+    private int DataNum = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        menuBottons.SetActive( true );
         chooseData.SetActive( false );
     }
 
@@ -35,22 +38,27 @@ public class Bottons : MonoBehaviour
 
     public void gameLeaving() {
         print( "Leaving!!" );
-        
+    }
+
+    public void EnterGame() {
+        print( "enter Game" );
+        //load data;
+        SceneManager.LoadScene( "GameScene" );
     }
 
     public void chooseData1() { // readData1 & enter Game
         print( "Data1" );
-        SceneManager.LoadScene( "GameScene" );
+        DataNum = 1;
     }
 
     public void chooseData2() { // readData2 & enter Game
         print( "Data2" );
-        SceneManager.LoadScene( "GameScene" );
+        DataNum = 2;
     }
 
     public void chooseData3() { // readData3 & enter Game
         print( "Data3" );
-        SceneManager.LoadScene( "GameScene" );
+        DataNum = 3;
     }
 
     public void visibleWindow() {
