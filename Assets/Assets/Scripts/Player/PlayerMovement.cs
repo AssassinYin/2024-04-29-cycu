@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public Rumbler Rumbler { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
     public PlayerInput PlayerInput { get; private set; }
+    public Animator Animator { get; private set; }
     #endregion COMPONENTS
 
     #region STATE PARAMETERS
@@ -84,16 +85,21 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Attack Attack;
     #endregion ATTACK
 
+    float _fallSpeedYDampingChangeThreshold;
+
     #region UNITY METHODS
     private void Awake()
     {
+        Rumbler = GetComponent<Rumbler>();
         Rigidbody = GetComponent<Rigidbody2D>();
+        Animator = GetComponent<Animator>();
     }
 
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
         IsFacingRight = true;
+        _fallSpeedYDampingChangeThreshold  = CameraManager.instance._fallSpeedYDampingChangeThreshold;
     }
 
     private void Update()
@@ -194,6 +200,20 @@ public class PlayerMovement : MonoBehaviour
         else
             IsSliding = false;
         #endregion SLIDE CHECKS
+
+        if (Rigidbody.velocity.y < _fallSpeedYDampingChangeThreshold &&
+            !CameraManager.instance.IsLerpingYDamping &&
+            !CameraManager.instance.LerpedFromPlayerFalling)
+            CameraManager.instance.LerpYDamping(true);
+
+        if (Rigidbody.velocity.y >= 0f &&
+            !CameraManager.instance.IsLerpingYDamping &&
+            CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpedFromPlayerFalling = false;
+            CameraManager.instance.LerpYDamping(false);
+        }
+
     }
 
     private void FixedUpdate()
@@ -237,6 +257,7 @@ public class PlayerMovement : MonoBehaviour
             #region JUMP
             if (CanJump() && LastPressedJumpTime > 0) //jump
             {
+                Animator.SetTrigger("Jump");
                 IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
@@ -265,6 +286,15 @@ public class PlayerMovement : MonoBehaviour
                 _isJumpCut = false;
                 _isJumpFalling = false;
                 Jump();
+            }
+
+            else
+            {
+                if (MoveInput.x == 0)
+                    Animator.SetTrigger("Idle");
+
+                else
+                    Animator.SetTrigger("Walk");
             }
             #endregion JUMP
 
@@ -470,6 +500,8 @@ public class PlayerMovement : MonoBehaviour
         //ensures can't call Jump multiple times from one press
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
+
+        Rumbler.RumblePulse(0.1f, 1f, 1f, 0.5f);
 
         #region Perform Jump
         //increase the force applied if we are falling, will always feel like jump same amount.
