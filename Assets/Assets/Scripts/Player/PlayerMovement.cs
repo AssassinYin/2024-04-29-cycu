@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     //scriptable object which holds all the player's movement parameters.
     public PlayerData Data;
@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
     public Rumbler Rumbler { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
     public PlayerInput PlayerInput { get; private set; }
+    public Animator Animator { get; private set; }
     #endregion COMPONENTS
 
     #region STATE PARAMETERS
@@ -45,6 +46,9 @@ public class Movement : MonoBehaviour
     private bool _dashRefilling;
     private Vector2 _lastDashDir;
     private bool _isDashAttacking;
+
+    //attack
+    private bool _attackRefilling;
     #endregion STATE PARAMETERS
 
     #region INPUT PARAMETERS
@@ -81,17 +85,21 @@ public class Movement : MonoBehaviour
     [SerializeField] private Attack Attack;
     #endregion ATTACK
 
+    float _fallSpeedYDampingChangeThreshold;
+
     #region UNITY METHODS
     private void Awake()
     {
+        Rumbler = GetComponent<Rumbler>();
         Rigidbody = GetComponent<Rigidbody2D>();
-        PlayerInput = GetComponent<PlayerInput>();
+        Animator = GetComponent<Animator>();
     }
 
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
         IsFacingRight = true;
+        _fallSpeedYDampingChangeThreshold  = CameraManager.instance._fallSpeedYDampingChangeThreshold;
     }
 
     private void Update()
@@ -140,7 +148,7 @@ public class Movement : MonoBehaviour
             }
 
             //left wall Check
-            else if(((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
+            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
                 || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
             {
                 LastOnWallLeftTime = Data.coyoteTime;
@@ -153,7 +161,10 @@ public class Movement : MonoBehaviour
         #endregion COLLISION CHECKS
 
         #region ATTACK CHECKS
-        if (!IsDashing && LastPressedAttackTime > 0)
+        if (!IsAttacking && !_attackRefilling)
+            StartCoroutine(nameof(RefillAttack), 1);
+
+        else if (!IsDashing && LastPressedAttackTime > 0)
         {
             IsAttacking = true;
             StartCoroutine(nameof(StartAttack));
@@ -189,6 +200,20 @@ public class Movement : MonoBehaviour
         else
             IsSliding = false;
         #endregion SLIDE CHECKS
+
+        if (Rigidbody.velocity.y < _fallSpeedYDampingChangeThreshold &&
+            !CameraManager.instance.IsLerpingYDamping &&
+            !CameraManager.instance.LerpedFromPlayerFalling)
+            CameraManager.instance.LerpYDamping(true);
+
+        if (Rigidbody.velocity.y >= 0f &&
+            !CameraManager.instance.IsLerpingYDamping &&
+            CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpedFromPlayerFalling = false;
+            CameraManager.instance.LerpYDamping(false);
+        }
+
     }
 
     private void FixedUpdate()
@@ -208,7 +233,7 @@ public class Movement : MonoBehaviour
             //if not direction pressed, dash forward.
             if (MoveInput != Vector2.zero)
                 if (Data.doLimitedDashDir)
-                    _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y))? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
+                    _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
 
                 else
                     _lastDashDir = MoveInput;
@@ -232,6 +257,7 @@ public class Movement : MonoBehaviour
             #region JUMP
             if (CanJump() && LastPressedJumpTime > 0) //jump
             {
+                Animator.SetTrigger("Jump");
                 IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
@@ -260,6 +286,15 @@ public class Movement : MonoBehaviour
                 _isJumpCut = false;
                 _isJumpFalling = false;
                 Jump();
+            }
+
+            else
+            {
+                if (MoveInput.x == 0)
+                    Animator.SetTrigger("Idle");
+
+                else
+                    Animator.SetTrigger("Walk");
             }
             #endregion JUMP
 
@@ -339,26 +374,36 @@ public class Movement : MonoBehaviour
     #region INPUT CALLBACKS
     //methods handle input detected in Update() or unity event
     public void OnMoveInput(InputAction.CallbackContext context) => MoveInput = context.ReadValue<Vector2>();
-    public void OnJumpInput()
+
+    public void OnJumpInput(InputAction.CallbackContext context)
     {
-        if (PlayerInput.actions["Jump"].WasPressedThisFrame())
+        if (context.action.WasPressedThisFrame())
             LastPressedJumpTime = Data.jumpInputBufferTime;
 
-        else if (PlayerInput.actions["Jump"].WasReleasedThisFrame())
+        else if (context.action.WasReleasedThisFrame())
             OnJumpUpInput();
     }
+
     public void OnJumpUpInput() => _isJumpCut = (CanJumpCut() || CanWallJumpCut());
-    public void OnDashInput() => LastPressedDashTime = Data.dashInputBufferTime;
-    public void OnAttackInput()
+
+    public void OnDashInput(InputAction.CallbackContext context)
     {
-        if (PlayerInput.actions["Attack"].WasPressedThisFrame())
+        if (context.action.WasPressedThisFrame())
+            LastPressedDashTime = Data.dashInputBufferTime;
+    }
+
+    public void OnAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.action.WasPressedThisFrame())
             LastPressedAttackTime = Data.attackInputBufferTime;
     }
     #endregion INPUT CALLBACKS
 
     #region GENERAL METHODS
     public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
+
     private void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
+
     private IEnumerator PerformSleep(float duration)
     {
         Time.timeScale = 0;
@@ -415,6 +460,7 @@ public class Movement : MonoBehaviour
         // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / Rigidbody.mass, Rigidbody.velocity.y);
         // Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second.
     }
+
     private void Turn()
     {
         //Stores scale and flips the player with y rotation.
@@ -431,6 +477,7 @@ public class Movement : MonoBehaviour
         IsFacingRight = !IsFacingRight;
         CameraCenter.CallTurn();
     }
+
     private void Slide()
     {
         //works the same as the Run but only in the y-axis
@@ -440,7 +487,8 @@ public class Movement : MonoBehaviour
         //clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
         //force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called
         //more detail in how force are applied to rigidbodies
-        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime), Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
+        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime),
+                                          Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
 
         Rigidbody.AddForce(movement * Vector2.up);
     }
@@ -453,6 +501,8 @@ public class Movement : MonoBehaviour
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
 
+        Rumbler.RumblePulse(0.1f, 1f, 1f, 0.5f);
+
         #region Perform Jump
         //increase the force applied if we are falling, will always feel like jump same amount.
         float force = Data.jumpForce;
@@ -462,6 +512,7 @@ public class Movement : MonoBehaviour
         Rigidbody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         #endregion
     }
+
     private void WallJump(int dir)
     {
         //ensures can't call wall Jump multiple times from one press
@@ -487,6 +538,7 @@ public class Movement : MonoBehaviour
         Rigidbody.AddForce(force, ForceMode2D.Impulse);
         #endregion
     }
+
     private void ExtraJumpReset() => currentExtraJump = Data.extraJump; //reset extra jump
     #endregion JUMP METHODS
 
@@ -526,6 +578,7 @@ public class Movement : MonoBehaviour
         //dash over
         IsDashing = false;
     }
+
     //short period before the player is able to dash again.
     private IEnumerator RefillDash()
     {
@@ -564,53 +617,49 @@ public class Movement : MonoBehaviour
         //attack over
         IsAttacking = false;
     }
+
+    //short period before the player is able to attack again.
+    private IEnumerator RefillAttack()
+    {
+        _attackRefilling = true;
+        yield return new WaitForSeconds(Data.attackRefillTime);
+        _attackRefilling = false;
+    }
+
     private void ApplyReactionForce(Vector2 dir)
     {
-        //increase the force applied if falling, will always feel like jump same amount.
+        //increase the force applied if falling
         float force = Data.jumpForce;
         if (Rigidbody.velocity.y < 0)
             force -= Rigidbody.velocity.y;
-        //propels the player upwards by the amount of upwardsForce
+        //propels the player upwards by the amount of jumpForce
         Rigidbody.AddForce(-(dir * force), ForceMode2D.Impulse);
+    }
 
-        /*
-        //applies force in the appropriate direction based on the amount of force from the attack
-        //if the attack was in a downward direction
-        if (Attack.IsDownwardStrike)
-        {
-            //increase the force applied if falling, will always feel like jump same amount.
-            float force = Data.jumpForce;
-            if (Rigidbody.velocity.y < 0)
-                force -= Rigidbody.velocity.y;
-            //propels the player upwards by the amount of upwardsForce
-            Rigidbody.AddForce(-(Attack.Dir * force), ForceMode2D.Impulse);
-        }
-        else
-        {
-            //increase the force applied if falling, will always feel like jump same amount.
-            float force = Data.jumpForce;
-            if (Rigidbody.velocity.y < 0)
-                force -= Rigidbody.velocity.y;
-            //propels the player upwards by the amount of defaultForce
-            Rigidbody.AddForce(-(Attack.Dir * force), ForceMode2D.Impulse);
-        }
-        */
+    private void Block()
+    {
+
     }
     #endregion
 
     #region CHECK METHODS
-    public bool IsOnGround() => Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer);
     public void CheckDirectionToFace(bool isMovingRight)
     {
         if (isMovingRight != IsFacingRight)
             Turn();
     }
+
     private bool CanSlide() => (LastOnWallTime > 0 && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0);
+
     private bool CanJump() => LastOnGroundTime > 0 && !IsJumping;
+
     private bool CanWallJump() => LastPressedJumpTime > 0 && LastOnWallTime > 0 && LastOnGroundTime <= 0 &&
         (!IsWallJumping || (LastOnWallRightTime > 0 && _lastWallJumpDir == 1) || (LastOnWallLeftTime > 0 && _lastWallJumpDir == -1));
+
     private bool CanJumpCut() => IsJumping && Rigidbody.velocity.y > 0;
+
     private bool CanWallJumpCut() => IsWallJumping && Rigidbody.velocity.y > 0;
+
     private bool CanDash()
     {
         if (!IsDashing && _dashesLeft < Data.dashAmount && LastOnGroundTime > 0 && !_dashRefilling)
