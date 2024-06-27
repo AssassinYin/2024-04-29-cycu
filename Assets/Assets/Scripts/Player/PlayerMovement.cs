@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D Rigidbody { get; private set; }
     public PlayerInput PlayerInput { get; private set; }
     public Animator Animator { get; private set; }
+    public EntityHealth EntityHealth { get; private set; }
     #endregion COMPONENTS
 
     #region STATE PARAMETERS
@@ -93,13 +94,14 @@ public class PlayerMovement : MonoBehaviour
         Rumbler = GetComponent<Rumbler>();
         Rigidbody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
+        EntityHealth = GetComponent<EntityHealth>();
     }
 
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
         IsFacingRight = true;
-        _fallSpeedYDampingChangeThreshold  = CameraManager.instance._fallSpeedYDampingChangeThreshold;
+        _fallSpeedYDampingChangeThreshold = CameraManager.instance._fallSpeedYDampingChangeThreshold;
     }
 
     private void Update()
@@ -115,104 +117,92 @@ public class PlayerMovement : MonoBehaviour
         LastPressedAttackTime -= Time.deltaTime;
         #endregion TIMERS
 
-        #region INPUT HANDLER
-        /* CAN BE REPLACED WITH UNITY EVENTS
-        MoveInput = PlayerInput.actions["Move"].ReadValue<Vector2>();
-
-        if (PlayerInput.actions["Jump"].WasPerformedThisFrame())
-            OnJumpInput();
-
-        if (PlayerInput.actions["Dash"].WasPressedThisFrame())
-            OnDashInput(); 
-
-        if (PlayerInput.actions["Attack"].WasPressedThisFrame())
-            OnAttackInput(); */
-        #endregion INPUT HANDLER
-
-        #region COLLISION CHECKS
-        if (!IsDashing && !IsJumping)
+        if (!EntityHealth.InInvulnerableFrame)
         {
-            //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
-            if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
+            #region COLLISION CHECKS
+            if (!IsDashing && !IsJumping)
             {
-                LastOnGroundTime = Data.coyoteTime;
-                ExtraJumpReset();
+                //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
+                if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
+                {
+                    LastOnGroundTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //right wall Check
+                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
+                        || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
+                {
+                    LastOnWallRightTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //left wall Check
+                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
+                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
+                {
+                    LastOnWallLeftTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
+                LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
+            }
+            #endregion COLLISION CHECKS
+
+            #region ATTACK CHECKS
+            if (!IsAttacking && !_attackRefilling)
+                StartCoroutine(nameof(RefillAttack), 1);
+
+            else if (!IsDashing && LastPressedAttackTime > 0)
+            {
+                IsAttacking = true;
+                StartCoroutine(nameof(StartAttack));
+            }
+            #endregion ATTACK CHECKS
+
+            #region JUMP CHECKS
+            if (IsJumping && Rigidbody.velocity.y < 0)
+            {
+                IsJumping = false;
+
+                if (!IsWallJumping)
+                    _isJumpFalling = true;
             }
 
-            //right wall Check
-            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
-                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
+            if (IsWallJumping && Time.time - _wallJumpStartTime > Data.wallJumpTime)
             {
-                LastOnWallRightTime = Data.coyoteTime;
-                ExtraJumpReset();
+                IsWallJumping = false;
             }
 
-            //left wall Check
-            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
-                || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
+            if (LastOnGroundTime > 0 && !IsJumping && !IsWallJumping)
             {
-                LastOnWallLeftTime = Data.coyoteTime;
-                ExtraJumpReset();
+                _isJumpCut = false;
+
+                if (!IsJumping)
+                    _isJumpFalling = false;
             }
+            #endregion JUMP CHECKS
 
-            //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
-            LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
-        }
-        #endregion COLLISION CHECKS
-
-        #region ATTACK CHECKS
-        if (!IsAttacking && !_attackRefilling)
-            StartCoroutine(nameof(RefillAttack), 1);
-
-        else if (!IsDashing && LastPressedAttackTime > 0)
-        {
-            IsAttacking = true;
-            StartCoroutine(nameof(StartAttack));
-        }
-        #endregion ATTACK CHECKS
-
-        #region JUMP CHECKS
-        if (IsJumping && Rigidbody.velocity.y < 0)
-        {
-            IsJumping = false;
-
-            if (!IsWallJumping)
-                _isJumpFalling = true;
+            #region SLIDE CHECKS
+            if (CanSlide() && ((LastOnWallLeftTime > 0 && MoveInput.x < 0) || (LastOnWallRightTime > 0 && MoveInput.x > 0)))
+                IsSliding = true;
+            else
+                IsSliding = false;
+            #endregion SLIDE CHECKS
         }
 
-        if (IsWallJumping && Time.time - _wallJumpStartTime > Data.wallJumpTime)
-        {
-            IsWallJumping = false;
-        }
-
-        if (LastOnGroundTime > 0 && !IsJumping && !IsWallJumping)
-        {
-            _isJumpCut = false;
-
-            if (!IsJumping)
-                _isJumpFalling = false;
-        }
-        #endregion JUMP CHECKS
-
-        #region SLIDE CHECKS
-        if (CanSlide() && ((LastOnWallLeftTime > 0 && MoveInput.x < 0) || (LastOnWallRightTime > 0 && MoveInput.x > 0)))
-            IsSliding = true;
-        else
-            IsSliding = false;
-        #endregion SLIDE CHECKS
-
-        if (Rigidbody.velocity.y < _fallSpeedYDampingChangeThreshold &&
-            !CameraManager.instance.IsLerpingYDamping &&
+        #region CAMERA CHECK
+        if (Rigidbody.velocity.y < _fallSpeedYDampingChangeThreshold && !CameraManager.instance.IsLerpingYDamping &&
             !CameraManager.instance.LerpedFromPlayerFalling)
             CameraManager.instance.LerpYDamping(true);
 
-        if (Rigidbody.velocity.y >= 0f &&
-            !CameraManager.instance.IsLerpingYDamping &&
-            CameraManager.instance.LerpedFromPlayerFalling)
+        if (Rigidbody.velocity.y >= 0f && !CameraManager.instance.IsLerpingYDamping && CameraManager.instance.LerpedFromPlayerFalling)
         {
             CameraManager.instance.LerpedFromPlayerFalling = false;
             CameraManager.instance.LerpYDamping(false);
         }
+        #endregion CAMERA CHECK
 
     }
 
@@ -309,7 +299,7 @@ public class PlayerMovement : MonoBehaviour
             #region ATTACK
             if (Attack.IsCollided)
             {
-                ApplyReactionForce(Attack.Dir);
+                ApplyReactionForce(Attack.Dir); //!!!!!!!!!! must change in future, ReactionForce should only be apply once
                 Attack.IsCollided = false;
             }
             #endregion ATTACK
@@ -384,7 +374,7 @@ public class PlayerMovement : MonoBehaviour
             OnJumpUpInput();
     }
 
-    public void OnJumpUpInput() => _isJumpCut = (CanJumpCut() || CanWallJumpCut());
+    public void OnJumpUpInput() => _isJumpCut = CanJumpCut() || CanWallJumpCut();
 
     public void OnDashInput(InputAction.CallbackContext context)
     {

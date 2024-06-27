@@ -14,6 +14,8 @@ public class EntityHealth : MonoBehaviour
     private int _currentHealth;
     private Rigidbody2D _rigidbody;
 
+    public bool InInvulnerableFrame { get { return _inInvulnerableFrame; } }
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
