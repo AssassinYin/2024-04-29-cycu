@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class starTree : MonoBehaviour
+public class StarTree : MonoBehaviour
 {
     // Start is called before the first frame update
 
     public enum Status { idle, walk };
     public Status status;
-    public enum Facing { left, right};
+    public enum Facing { left, right };
     public Facing facing;
     public float speed;
     private Transform Mytransform;
@@ -26,8 +26,8 @@ public class starTree : MonoBehaviour
         }
 
         Mytransform = this.transform;
-        if ( GameObject.Find("player") != null ) {
-            playerTrans = GameObject.Find("player").transform;
+        if ( GameObject.Find("Player") != null ) {
+            playerTrans = GameObject.Find("Player").transform;
         }
     }
 
