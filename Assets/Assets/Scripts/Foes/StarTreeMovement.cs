@@ -25,6 +25,7 @@ public class StarTreeMovement : MonoBehaviour
 
     void Update()
     {
+        walkPoint.y = transform.position.y;
         StateChange();
     }
 
