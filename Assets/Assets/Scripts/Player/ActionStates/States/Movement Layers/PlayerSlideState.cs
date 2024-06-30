@@ -9,7 +9,7 @@ public class PlayerSlideState : PlayerBaseState
         if (_context.CanDash() && _context.LastPressedDashTime > 0)
             SwitchState(_factory.Dash());
 
-        else if (_superState is PlayerOnWallState && _context.LastPressedJumpTime > 0)
+        else if (_superState is PlayerDoubleJumpState && _context.LastPressedJumpTime > 0)
             SwitchState(_factory.WallJump());
 
         else if (_context.MoveInput.x != 0)

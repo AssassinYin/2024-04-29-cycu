@@ -12,11 +12,11 @@ public class PlayerStateFactory
     }
     public PlayerBaseState Airborne()
     {
-        return new PlayerAirborneState(_context, this);
+        return new PlayerIdleJumpState(_context, this);
     }
     public PlayerBaseState OnWall()
     {
-        return new PlayerOnWallState(_context, this);
+        return new PlayerDoubleJumpState(_context, this);
     }
     #endregion POSITION
 
@@ -27,7 +27,7 @@ public class PlayerStateFactory
     }
     public PlayerBaseState Walk()
     {
-        return new PlayerWalkState(_context, this);
+        return new PlayerMoveState(_context, this);
     }
     public PlayerBaseState Dash()
     {
