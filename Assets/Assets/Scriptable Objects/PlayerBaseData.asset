@@ -55,8 +55,14 @@ MonoBehaviour:
   doLimitedDashDir: 1
   defaultForce: 0
   upwardsForce: 0
-  attackReadyTime: 0
-  attackTime: 1
-  attackEndTime: 0
-  attackRefillTime: 0
+  attackReadyTime: 0.2
+  attackTime: 0.2
+  attackEndTime: 0.2
+  attackRefillTime: 0.2
   attackInputBufferTime: 0.2
+  blockReadyTime: 0.2
+  blockPreciseTime: 0.2
+  blockTime: 0.2
+  blockEndTime: 0.2
+  blockRefillTime: 0.2
+  blockInputBufferTime: 0.1
