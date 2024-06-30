@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsWallJumping { get; private set; }
     public bool IsDashing { get; private set; }
     public bool IsAttacking { get; private set; }
+    public bool IsBlocking { get; private set; }
 
     //timers
     public float LastOnGroundTime { get; private set; }
@@ -50,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
 
     //attack
     private bool _attackRefilling;
+    //attack
+    private bool _blockRefilling;
     #endregion STATE PARAMETERS
 
     #region INPUT PARAMETERS
@@ -57,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
     public float LastPressedJumpTime { get; private set; }
     public float LastPressedDashTime { get; private set; }
     public float LastPressedAttackTime { get; private set; }
+    public float LastPressedBlockTime { get; private set; }
     #endregion INPUT PARAMETERS
 
     #region CHECK PARAMETERS
@@ -160,6 +164,17 @@ public class PlayerMovement : MonoBehaviour
                 StartCoroutine(nameof(StartAttack));
             }
             #endregion ATTACK CHECKS
+
+            #region BLOCK CHECKS
+            if (!IsBlocking && !_attackRefilling)
+                StartCoroutine(nameof(RefillBlock), 1);
+
+            else if (!IsDashing && LastPressedBlockTime > 0 && LastOnGroundTime > 0)
+            {
+                IsAttacking = true;
+                StartCoroutine(nameof(StartBlock));
+            }
+            #endregion BLOCK CHECKS
 
             #region JUMP CHECKS
             if (IsJumping && Rigidbody.velocity.y < 0)
@@ -626,9 +641,39 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody.AddForce(-(dir * force), ForceMode2D.Impulse);
     }
 
-    private void Block()
+    private IEnumerator StartBlock()
     {
+        //ensures can't call Block multiple times from one press
+        LastPressedAttackTime = 0;
+        LastPressedJumpTime = 0;
 
+        //attack ready phase
+        float startTime = Time.time;
+        while (Time.time - startTime <= Data.attackReadyTime)
+            yield return null;
+
+        //attacking phase
+        startTime = Time.time;
+        Attack.GetComponent<Collider2D>().enabled = true;
+        while (Time.time - startTime <= Data.attackTime)
+            yield return null;
+
+        //attack end phase
+        startTime = Time.time;
+        Attack.GetComponent<Collider2D>().enabled = false;
+        while (Time.time - startTime <= Data.attackEndTime)
+            yield return null;
+
+        //attack over
+        IsAttacking = false;
+    }
+
+    //short period before the player is able to block again.
+    private IEnumerator RefillBlock()
+    {
+        _attackRefilling = true;
+        yield return new WaitForSeconds(Data.attackRefillTime);
+        _attackRefilling = false;
     }
     #endregion
 
