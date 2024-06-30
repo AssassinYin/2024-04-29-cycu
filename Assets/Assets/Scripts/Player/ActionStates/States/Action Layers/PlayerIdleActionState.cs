@@ -8,18 +8,22 @@ public class PlayerIdleActionState : PlayerBaseState
     {
 
     }
+
     public override void EnterState()
     {
         Debug.Log("AIRBORNE STATE");
     }
+
     public override void UpdateState()
     {
         
     }
+
     public override void ExitState()
     {
         
     }
+
     public override void InitializeSubState()
     {
 
