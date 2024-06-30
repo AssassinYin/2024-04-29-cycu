@@ -154,6 +154,24 @@ public class PlayerData : ScriptableObject
     [Range(0.01f, 0.5f)] public float attackInputBufferTime;
     #endregion ATTACK
 
+    #region BLOCK
+    [Space(20)]
+
+    [Header("Block")]
+    //how long the player should move when block collides
+    [Range(0f, 1f)] public float blockReadyTime;
+    //how long the player should move when precise block collides
+    [Range(0f, 1f)] public float blockPreciseTime;
+    //time block takes to end
+    [Range(0f, 1f)] public float blockTime;
+    //time after finish block, the immobilized time of block
+    [Range(0f, 1f)] public float blockEndTime;
+    //time before block refilled
+    [Range(0f, 1f)] public float blockRefillTime;
+    //grace period after pressing block where an block will be automatically performed once the requirements are met
+    [Range(0.01f, 0.5f)] public float blockInputBufferTime;
+    #endregion BLOCK
+
     #region CAMERA
     #endregion CAMERA
 
