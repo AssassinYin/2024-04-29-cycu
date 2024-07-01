@@ -5,6 +5,7 @@ public abstract class PlayerBaseState
     protected PlayerStateMachine _context;
     protected PlayerStateFactory _factory;
     protected PlayerBaseState _superState, _subState;
+
     public PlayerBaseState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
     {
         _context = currentContext;
@@ -14,9 +15,13 @@ public abstract class PlayerBaseState
 
     #region ABSTRACT METHODS
     public abstract void EnterState();
+
     public abstract void UpdateState();
+
     public abstract void ExitState();
+
     public abstract void CheckSwitchState();
+
     public abstract void InitializeSubState();
     #endregion ABSTRACT METHODS
 
@@ -27,6 +32,7 @@ public abstract class PlayerBaseState
         CheckSwitchState();
         _subState?.UpdateStates();
     }
+
     protected void SwitchState(PlayerBaseState newState)
     {
         //current state exit
@@ -43,10 +49,12 @@ public abstract class PlayerBaseState
         else
             _context.CurrentState = newState;
     }
+
     protected void SetSuperState(PlayerBaseState newSuperState)
     {
         _superState = newSuperState;
     }
+
     protected void SetSubState(PlayerBaseState newSubState)
     {
         Debug.Log("HI STATE");

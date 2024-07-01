@@ -8,18 +8,22 @@ public class PlayerHurtstop : PlayerBaseState
     {
 
     }
+
     public override void EnterState()
     {
-        Debug.Log("AIRBORNE STATE");
+        Debug.Log("");
     }
+
     public override void UpdateState()
     {
         
     }
+
     public override void ExitState()
     {
         
     }
+
     public override void InitializeSubState()
     {
 
