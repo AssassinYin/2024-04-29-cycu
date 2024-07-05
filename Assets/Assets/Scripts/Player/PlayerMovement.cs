@@ -243,11 +243,13 @@ public class PlayerMovement : MonoBehaviour
 
             //if not direction pressed, dash forward.
             if (MoveInput != Vector2.zero)
+            {
                 if (Data.doLimitedDashDir)
                     _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
 
                 else
                     _lastDashDir = MoveInput;
+            }
 
             else
                 _lastDashDir = IsFacingRight ? Vector2.right : Vector2.left;
@@ -719,7 +721,7 @@ public class PlayerMovement : MonoBehaviour
     private bool CanDash()
     {
         if (!IsDashing && _dashesLeft < Data.dashAmount && LastOnGroundTime > 0 && !_dashRefilling)
-            StartCoroutine(nameof(RefillDash), 1);
+            StartCoroutine(nameof(RefillDash));
         return _dashesLeft > 0;
     }
     #endregion CHECK METHODS

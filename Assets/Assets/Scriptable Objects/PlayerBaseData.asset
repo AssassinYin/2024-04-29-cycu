@@ -45,14 +45,14 @@ MonoBehaviour:
   jumpInputBufferTime: 0.2
   dashAmount: 1
   dashSpeed: 40
-  dashSleepTime: 0
-  dashAttackTime: 0
-  dashEndTime: 0
-  dashEndSpeed: {x: 0, y: 0}
+  dashSleepTime: 2
+  dashAttackTime: 2
+  dashEndTime: 2
+  dashEndSpeed: {x: 1, y: 1}
   dashEndRunLerp: 0
-  dashRefillTime: 0
+  dashRefillTime: 1
   dashInputBufferTime: 0.2
-  doLimitedDashDir: 1
+  doLimitedDashDir: 0
   defaultForce: 0
   upwardsForce: 0
   attackReadyTime: 0.2
