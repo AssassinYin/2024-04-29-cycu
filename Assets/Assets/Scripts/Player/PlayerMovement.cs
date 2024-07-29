@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    //scriptable object which holds all the player's movement parameters.
     public PlayerData Data;
 
     #region COMPONENTS
@@ -66,7 +65,6 @@ public class PlayerMovement : MonoBehaviour
     #region CHECK PARAMETERS
     [Header("Checks")]
     [SerializeField] private Transform _groundCheckPoint;
-    //size of groundCheck depends on the size of character, slightly small than width (for ground) and height. (for the wall check)
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.5f, 0.025f);
     [Space(5)]
     [SerializeField] private Transform _frontWallCheckPoint;
@@ -85,17 +83,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private CameraCenter CameraCenter;
     #endregion CAMERA
 
-    #region ATTACK
-    [Header("Attack")]
+    #region HITBOXES
+    [Header("Hitboxes")]
     [SerializeField] private Attack Attack;
-    #endregion ATTACK
-
-    #region BLOCK
-    [Header("Block")]
     [SerializeField] private Block Block;
-    #endregion BLOCK
+    #endregion HITBOXES
 
-    float _fallSpeedYDampingChangeThreshold;
+    private float _fallSpeedYDampingChangeThreshold;
 
     #region UNITY METHODS
     private void Awake()
@@ -127,40 +121,40 @@ public class PlayerMovement : MonoBehaviour
         LastPressedBlockTime -= Time.deltaTime;
         #endregion TIMERS
 
+        #region COLLISION CHECKS
+        if (!IsDashing && !IsJumping)
+        {
+            //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
+            if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
+            {
+                LastOnGroundTime = Data.coyoteTime;
+                ExtraJumpReset();
+            }
+
+            //right wall Check
+            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
+                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
+            {
+                LastOnWallRightTime = Data.coyoteTime;
+                ExtraJumpReset();
+            }
+
+            //left wall Check
+            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
+                || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
+            {
+                LastOnWallLeftTime = Data.coyoteTime;
+                ExtraJumpReset();
+            }
+
+            //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
+            LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
+        }
+        #endregion COLLISION CHECKS
+
         if (!EntityHealth.InInvulnerableFrame)
         {
-            #region COLLISION CHECKS
-            if (!IsDashing && !IsJumping)
-            {
-                //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
-                if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
-                {
-                    LastOnGroundTime = Data.coyoteTime;
-                    ExtraJumpReset();
-                }
-
-                //right wall Check
-                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
-                        || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
-                {
-                    LastOnWallRightTime = Data.coyoteTime;
-                    ExtraJumpReset();
-                }
-
-                //left wall Check
-                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
-                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
-                {
-                    LastOnWallLeftTime = Data.coyoteTime;
-                    ExtraJumpReset();
-                }
-
-                //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
-                LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
-            }
-            #endregion COLLISION CHECKS
-
-            #region ATTACK CHECKS
+            #region ACTIONS CHECKS
             if (!IsBlocking && !IsAttacking && !_attackRefilling)
                 StartCoroutine(nameof(RefillAttack), 1);
 
@@ -169,9 +163,7 @@ public class PlayerMovement : MonoBehaviour
                 IsAttacking = true;
                 StartCoroutine(nameof(StartAttack));
             }
-            #endregion ATTACK CHECKS
 
-            #region BLOCK CHECKS
             if (!IsAttacking && !IsBlocking && !_blockRefilling)
                 StartCoroutine(nameof(RefillBlock), 1);
 
@@ -180,7 +172,9 @@ public class PlayerMovement : MonoBehaviour
                 IsBlocking = true;
                 StartCoroutine(nameof(StartBlock));
             }
-            #endregion BLOCK CHECKS
+
+            //Heal code insert here
+            #endregion ACTIONS CHECKS
 
             #region JUMP CHECKS
             if (IsJumping && Rigidbody.velocity.y < 0)
