@@ -36,7 +36,8 @@ public class starTreeAni : MonoBehaviour
 
     public void throwStar() {
         treeCon.throwAttack();
-        treeCon.changeToStand();
+        animator.Play("starTreeStand");
+        //treeCon.changeToStand();
         //treeCon.isAttacking = false;
         //treeCon.canChangeState = true;
         //treeCon.changeState();
@@ -44,7 +45,8 @@ public class starTreeAni : MonoBehaviour
     }
 
     public void spin() {
-        treeCon.changeToStand();
+        animator.Play("starTreeStand");
+        //treeCon.changeToStand();
         //treeCon.isAttacking = false;
         //treeCon.canChangeState = true;
         //treeCon.changeState();
@@ -52,7 +54,8 @@ public class starTreeAni : MonoBehaviour
 
     public void dig() {
         treeCon.digAttack();
-        treeCon.changeToStand();
+        animator.Play("starTreeStand");
+        //treeCon.changeToStand();
         //treeCon.isAttacking = false;
         //treeCon.canChangeState = true;
         //treeCon.changeState();
