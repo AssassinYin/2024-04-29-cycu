@@ -2,8 +2,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerStateMachine : MonoBehaviour
 {
+    public PlayerBaseState CurrentState { get; set; }
+    //scriptable object which holds all the player's movement parameters.
     public PlayerData Data;
 
     #region COMPONENTS
@@ -65,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
     #region CHECK PARAMETERS
     [Header("Checks")]
     [SerializeField] private Transform _groundCheckPoint;
+    //size of groundCheck depends on the size of character, slightly small than width (for ground) and height. (for the wall check)
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.5f, 0.025f);
     [Space(5)]
     [SerializeField] private Transform _frontWallCheckPoint;
@@ -83,13 +86,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private CameraCenter CameraCenter;
     #endregion CAMERA
 
-    #region HITBOXES
-    [Header("Hitboxes")]
+    #region ATTACK
+    [Header("Attack")]
     [SerializeField] private Attack Attack;
-    [SerializeField] private Block Block;
-    #endregion HITBOXES
+    #endregion ATTACK
 
-    private float _fallSpeedYDampingChangeThreshold;
+    #region BLOCK
+    [Header("Block")]
+    [SerializeField] private Block Block;
+    #endregion BLOCK
+
+    float _fallSpeedYDampingChangeThreshold;
 
     #region UNITY METHODS
     private void Awake()
@@ -106,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         IsFacingRight = true;
         _fallSpeedYDampingChangeThreshold = CameraManager.instance._fallSpeedYDampingChangeThreshold;
     }
-
+    /*
     private void Update()
     {
         #region TIMERS
@@ -121,40 +128,40 @@ public class PlayerMovement : MonoBehaviour
         LastPressedBlockTime -= Time.deltaTime;
         #endregion TIMERS
 
-        #region COLLISION CHECKS
-        if (!IsDashing && !IsJumping)
-        {
-            //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
-            if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
-            {
-                LastOnGroundTime = Data.coyoteTime;
-                ExtraJumpReset();
-            }
-
-            //right wall Check
-            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
-                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
-            {
-                LastOnWallRightTime = Data.coyoteTime;
-                ExtraJumpReset();
-            }
-
-            //left wall Check
-            else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
-                || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
-            {
-                LastOnWallLeftTime = Data.coyoteTime;
-                ExtraJumpReset();
-            }
-
-            //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
-            LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
-        }
-        #endregion COLLISION CHECKS
-
         if (!EntityHealth.InInvulnerableFrame)
         {
-            #region ACTIONS CHECKS
+            #region COLLISION CHECKS
+            if (!IsDashing && !IsJumping)
+            {
+                //if grounded set box overlaps with ground, then sets the lastGrounded to coyoteTime
+                if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
+                {
+                    LastOnGroundTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //right wall Check
+                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)
+                        || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)) && !IsWallJumping)
+                {
+                    LastOnWallRightTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //left wall Check
+                else if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && !IsFacingRight)
+                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallLayer) && IsFacingRight)) && !IsWallJumping)
+                {
+                    LastOnWallLeftTime = Data.coyoteTime;
+                    ExtraJumpReset();
+                }
+
+                //two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
+                LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
+            }
+            #endregion COLLISION CHECKS
+
+            #region ATTACK CHECKS
             if (!IsBlocking && !IsAttacking && !_attackRefilling)
                 StartCoroutine(nameof(RefillAttack), 1);
 
@@ -163,7 +170,9 @@ public class PlayerMovement : MonoBehaviour
                 IsAttacking = true;
                 StartCoroutine(nameof(StartAttack));
             }
+            #endregion ATTACK CHECKS
 
+            #region BLOCK CHECKS
             if (!IsAttacking && !IsBlocking && !_blockRefilling)
                 StartCoroutine(nameof(RefillBlock), 1);
 
@@ -172,9 +181,7 @@ public class PlayerMovement : MonoBehaviour
                 IsBlocking = true;
                 StartCoroutine(nameof(StartBlock));
             }
-
-            //Heal code insert here
-            #endregion ACTIONS CHECKS
+            #endregion BLOCK CHECKS
 
             #region JUMP CHECKS
             if (IsJumping && Rigidbody.velocity.y < 0)
@@ -237,13 +244,11 @@ public class PlayerMovement : MonoBehaviour
 
             //if not direction pressed, dash forward.
             if (MoveInput != Vector2.zero)
-            {
                 if (Data.doLimitedDashDir)
                     _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
 
                 else
                     _lastDashDir = MoveInput;
-            }
 
             else
                 _lastDashDir = IsFacingRight ? Vector2.right : Vector2.left;
@@ -376,7 +381,94 @@ public class PlayerMovement : MonoBehaviour
         //no gravity when dashing. (returns to normal once initial dashAttack phase over)
         #endregion GRAVITY
     }
+    */
     #endregion UNITY METHODS
+
+    #region GENERAL METHODS
+    public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
+
+    private void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
+
+    private IEnumerator PerformSleep(float duration)
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(duration); //must be Realtime since timeScale is 0
+        Time.timeScale = 1;
+    }
+
+    private void Turn()
+    {
+        //Stores scale and flips the player with y rotation.
+        if (IsFacingRight)
+        {
+            Vector3 rotator = new Vector3(transform.rotation.x, 180.0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+        else
+        {
+            Vector3 rotator = new Vector3(transform.rotation.x, 0.0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+        }
+        IsFacingRight = !IsFacingRight;
+        CameraCenter.CallTurn();
+    }
+
+    private void ExtraJumpReset() => currentExtraJump = Data.extraJump; //reset extra jump
+    #endregion GENERAL METHODS
+
+    #region CHECK METHODS
+    public void CheckDirectionToFace(bool isMovingRight)
+    {
+        if (isMovingRight != IsFacingRight)
+            Turn();
+    }
+
+    private bool CanSlide() => (LastOnWallTime > 0 && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0);
+
+    private bool CanJump() => LastOnGroundTime > 0 && !IsJumping;
+
+    private bool CanWallJump() => LastPressedJumpTime > 0 && LastOnWallTime > 0 && LastOnGroundTime <= 0 &&
+        (!IsWallJumping || (LastOnWallRightTime > 0 && _lastWallJumpDir == 1) || (LastOnWallLeftTime > 0 && _lastWallJumpDir == -1));
+
+    private bool CanJumpCut() => IsJumping && Rigidbody.velocity.y > 0;
+
+    private bool CanWallJumpCut() => IsWallJumping && Rigidbody.velocity.y > 0;
+
+    private bool CanDash()
+    {
+        if (!IsDashing && _dashesLeft < Data.dashAmount && LastOnGroundTime > 0 && !_dashRefilling)
+            StartCoroutine(nameof(RefillDash), 1);
+        return _dashesLeft > 0;
+    }
+    #endregion CHECK METHODS
+
+    #region REFILL METHODS
+    //short period before the player is able to dash again.
+    private IEnumerator RefillDash()
+    {
+        //short cooldown, can't constantly dash along the ground.
+        _dashRefilling = true;
+        yield return new WaitForSeconds(Data.dashRefillTime);
+        _dashRefilling = false;
+        _dashesLeft = Mathf.Min(Data.dashAmount, _dashesLeft + 1);
+    }
+
+    //short period before the player is able to attack again.
+    private IEnumerator RefillAttack()
+    {
+        _attackRefilling = true;
+        yield return new WaitForSeconds(Data.attackRefillTime);
+        _attackRefilling = false;
+    }
+
+    //short period before the player is able to block again.
+    private IEnumerator RefillBlock()
+    {
+        _blockRefilling = true;
+        yield return new WaitForSeconds(Data.blockRefillTime);
+        _blockRefilling = false;
+    }
+    #endregion REFILL METHODS
 
     #region INPUT CALLBACKS
     //methods handle input detected in Update() or unity event
@@ -411,314 +503,6 @@ public class PlayerMovement : MonoBehaviour
             LastPressedBlockTime = Data.blockInputBufferTime;
     }
     #endregion INPUT CALLBACKS
-
-    #region GENERAL METHODS
-    public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
-
-    private void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
-
-    private IEnumerator PerformSleep(float duration)
-    {
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(duration); //must be Realtime since timeScale is 0
-        Time.timeScale = 1;
-    }
-    #endregion GENERAL METHODS
-
-    #region RUN METHODS
-    private void Run(float lerpAmount)
-    {
-        //calculate the direction we want to move in and our desired velocity
-        float targetSpeed = MoveInput.x * Data.runMaxSpeed;
-        //we can reduce are control using Lerp() this smooths changes to are direction and speed
-        targetSpeed = Mathf.Lerp(Rigidbody.velocity.x, targetSpeed, lerpAmount);
-
-        #region Calculate AccelRate
-        float accelRate;
-
-        //gets an acceleration value based on if we are accelerating (includes turning) or trying to decelerate (stop).
-        //as well as applying a multiplier if we're airborne.
-        if (LastOnGroundTime > 0)
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount;
-        else
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount * Data.accelInAir : Data.runDeccelAmount * Data.deccelInAir;
-        #endregion
-
-        #region Add Bonus Jump Apex Acceleration
-        //increase are acceleration and maxSpeed when at the apex of their jump, makes the jump feel a bit more bouncy, responsive and natural.
-        if ((IsJumping || IsWallJumping || _isJumpFalling) && Mathf.Abs(Rigidbody.velocity.y) < Data.jumpHangTimeThreshold)
-        {
-            accelRate *= Data.jumpHangAccelerationMult;
-            targetSpeed *= Data.jumpHangMaxSpeedMult;
-        }
-        #endregion
-
-        #region Conserve Momentum
-        //won't slow the player down if they are moving in their desired direction but at a greater speed than their maxSpeed.
-        //prevent any deceleration from happening. (conserve current momentum)
-        if (Data.doConserveMomentum && Mathf.Abs(Rigidbody.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(Rigidbody.velocity.x)
-            == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && LastOnGroundTime < 0)
-            accelRate = 0;
-        #endregion
-
-        //calculate difference between current velocity and desired velocity
-        float speedDif = targetSpeed - Rigidbody.velocity.x;
-
-        //calculate force along x-axis to apply to the player
-        float movement = speedDif * accelRate;
-
-        //convert to a vector and apply to rigidbody
-        Rigidbody.AddForce(movement * Vector2.right, ForceMode2D.Force);
-
-        // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / Rigidbody.mass, Rigidbody.velocity.y);
-        // Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second.
-    }
-
-    private void Turn()
-    {
-        //Stores scale and flips the player with y rotation.
-        if (IsFacingRight)
-        {
-            Vector3 rotator = new Vector3(transform.rotation.x, 180.0f, transform.rotation.z);
-            transform.rotation = Quaternion.Euler(rotator);
-        }
-        else
-        {
-            Vector3 rotator = new Vector3(transform.rotation.x, 0.0f, transform.rotation.z);
-            transform.rotation = Quaternion.Euler(rotator);
-        }
-        IsFacingRight = !IsFacingRight;
-        CameraCenter.CallTurn();
-    }
-
-    private void Slide()
-    {
-        //works the same as the Run but only in the y-axis
-        float speedDif = Data.slideSpeed - Rigidbody.velocity.y;
-        float movement = speedDif * Data.slideAccel;
-
-        //clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
-        //force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called
-        //more detail in how force are applied to rigidbodies
-        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime),
-                                          Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
-
-        Rigidbody.AddForce(movement * Vector2.up);
-    }
-    #endregion RUN METHODS
-
-    #region JUMP METHODS
-    private void Jump()
-    {
-        //ensures can't call Jump multiple times from one press
-        LastPressedJumpTime = 0;
-        LastOnGroundTime = 0;
-
-        Rumbler.RumblePulse(0.1f, 1f, 1f, 0.5f);
-
-        #region Perform Jump
-        //increase the force applied if we are falling, will always feel like jump same amount.
-        float force = Data.jumpForce;
-        if (Rigidbody.velocity.y < 0)
-            force -= Rigidbody.velocity.y;
-
-        Rigidbody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        #endregion
-    }
-
-    private void WallJump(int dir)
-    {
-        //ensures can't call wall Jump multiple times from one press
-        LastPressedJumpTime = 0;
-        LastOnGroundTime = 0;
-        LastOnWallRightTime = 0;
-        LastOnWallLeftTime = 0;
-
-        #region Perform Wall Jump
-        //apply force in opposite direction of wall
-        Vector2 force = new Vector2(Data.wallJumpForce.x, Data.wallJumpForce.y);
-        force.x *= dir;
-
-        if (Mathf.Sign(Rigidbody.velocity.x) != Mathf.Sign(force.x))
-            force.x -= Rigidbody.velocity.x;
-
-        //checks whether player is falling, if so subtract the velocity.y (counteracting force of gravity)
-        //ensures the player always reaches desired jump force or greater
-        if (Rigidbody.velocity.y < 0)
-            force.y -= Rigidbody.velocity.y;
-
-        //default apply are force instantly ignoring mass
-        Rigidbody.AddForce(force, ForceMode2D.Impulse);
-        #endregion
-    }
-
-    private void ExtraJumpReset() => currentExtraJump = Data.extraJump; //reset extra jump
-    #endregion JUMP METHODS
-
-    #region DASH METHODS
-    private IEnumerator StartDash(Vector2 dir)
-    {
-        //ensures can't call Dash multiple times from one press
-        LastOnGroundTime = 0;
-        LastPressedDashTime = 0;
-
-        float startTime = Time.time;
-
-        _dashesLeft--;
-        _isDashAttacking = true;
-
-        SetGravityScale(0);
-
-        //keep the player's velocity at the dash speed during the "attack" phase
-        while (Time.time - startTime <= Data.dashAttackTime)
-        {
-            Rigidbody.velocity = dir.normalized * Data.dashSpeed;
-            //pauses the loop until the next frame, creating something of a Update loop
-            yield return null;
-        }
-
-        startTime = Time.time;
-
-        _isDashAttacking = false;
-
-        //begins the "end" of dash where return some control to the player but still limit run acceleration
-        SetGravityScale(Data.gravityScale);
-        Rigidbody.velocity = Data.dashEndSpeed * dir.normalized;
-
-        while (Time.time - startTime <= Data.dashEndTime)
-            yield return null;
-
-        //dash over
-        IsDashing = false;
-    }
-
-    //short period before the player is able to dash again.
-    private IEnumerator RefillDash()
-    {
-        //short cooldown, can't constantly dash along the ground.
-        _dashRefilling = true;
-        yield return new WaitForSeconds(Data.dashRefillTime);
-        _dashRefilling = false;
-        _dashesLeft = Mathf.Min(Data.dashAmount, _dashesLeft + 1);
-    }
-    #endregion DASH METHODS
-
-    #region ATTACK METHODS
-    private IEnumerator StartAttack()
-    {
-        //ensures can't call attack multiple times from one press
-        LastPressedAttackTime = 0;
-        LastPressedJumpTime = 0;
-
-        //attack ready phase
-        float startTime = Time.time;
-        while (Time.time - startTime <= Data.attackReadyTime)
-            yield return null;
-
-        //attacking phase
-        startTime = Time.time;
-        Attack.GetComponent<Collider2D>().enabled = true;
-        while (Time.time - startTime <= Data.attackTime)
-            yield return null;
-
-        //attack end phase
-        startTime = Time.time;
-        Attack.GetComponent<Collider2D>().enabled = false;
-        while (Time.time - startTime <= Data.attackEndTime)
-            yield return null;
-
-        //attack over
-        IsAttacking = false;
-    }
-
-    //short period before the player is able to attack again.
-    private IEnumerator RefillAttack()
-    {
-        _attackRefilling = true;
-        yield return new WaitForSeconds(Data.attackRefillTime);
-        _attackRefilling = false;
-    }
-
-    private void ApplyReactionForce(Vector2 dir)
-    {
-        //increase the force applied if falling
-        float force = Data.jumpForce;
-        if (Rigidbody.velocity.y < 0)
-            force -= Rigidbody.velocity.y;
-        //propels the player upwards by the amount of jumpForce
-        Rigidbody.AddForce(-(dir * force), ForceMode2D.Impulse);
-    }
-
-    private IEnumerator StartBlock()
-    {
-        //ensures can't call block multiple times from one press
-        LastPressedBlockTime = 0;
-        LastPressedJumpTime = 0;
-
-        //block ready phase
-        float startTime = Time.time;
-        while (Time.time - startTime <= Data.blockReadyTime)
-            yield return null;
-
-        BoxCollider2D collider2D = Block.GetComponent<BoxCollider2D>();
-        //blocking precise phase
-        collider2D.enabled = true;
-        collider2D.size = new Vector2(1.5f, 1.5f);
-        startTime = Time.time;
-        while (Time.time - startTime <= Data.blockPreciseTime)
-            yield return null;
-
-        //blocking phase
-        collider2D.size = new Vector2(1.25f, 1.25f);
-        startTime = Time.time;
-        Block.GetComponent<Collider2D>().enabled = true;
-        while (Time.time - startTime <= Data.blockTime)
-            yield return null;
-
-        //block end phase
-        startTime = Time.time;
-        collider2D.enabled = false;
-        while (Time.time - startTime <= Data.blockEndTime)
-            yield return null;
-
-        //block over
-        IsBlocking = false;
-    }
-
-    //short period before the player is able to block again.
-    private IEnumerator RefillBlock()
-    {
-        _blockRefilling = true;
-        yield return new WaitForSeconds(Data.blockRefillTime);
-        _blockRefilling = false;
-    }
-    #endregion
-
-    #region CHECK METHODS
-    public void CheckDirectionToFace(bool isMovingRight)
-    {
-        if (isMovingRight != IsFacingRight)
-            Turn();
-    }
-
-    private bool CanSlide() => (LastOnWallTime > 0 && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0);
-
-    private bool CanJump() => LastOnGroundTime > 0 && !IsJumping;
-
-    private bool CanWallJump() => LastPressedJumpTime > 0 && LastOnWallTime > 0 && LastOnGroundTime <= 0 &&
-        (!IsWallJumping || (LastOnWallRightTime > 0 && _lastWallJumpDir == 1) || (LastOnWallLeftTime > 0 && _lastWallJumpDir == -1));
-
-    private bool CanJumpCut() => IsJumping && Rigidbody.velocity.y > 0;
-
-    private bool CanWallJumpCut() => IsWallJumping && Rigidbody.velocity.y > 0;
-
-    private bool CanDash()
-    {
-        if (!IsDashing && _dashesLeft < Data.dashAmount && LastOnGroundTime > 0 && !_dashRefilling)
-            StartCoroutine(nameof(RefillDash));
-        return _dashesLeft > 0;
-    }
-    #endregion CHECK METHODS
 
     #region EDITOR METHODS
     private void OnDrawGizmosSelected()
