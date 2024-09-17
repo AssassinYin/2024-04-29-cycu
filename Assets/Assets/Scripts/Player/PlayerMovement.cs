@@ -205,6 +205,20 @@ public class PlayerMovement : MonoBehaviour
             else
                 IsSliding = false;
             #endregion SLIDE CHECKS
+
+            if (IsJumping)
+                Animator.SetTrigger("Jump");
+
+            else if (MoveInput.x != 0)
+                Animator.SetTrigger("Walk");
+
+            else
+                Animator.SetTrigger("Idle");
+        }
+
+        else
+        {
+            Animator.SetTrigger("Hurtstop");
         }
 
         #region CAMERA CHECK
@@ -264,7 +278,6 @@ public class PlayerMovement : MonoBehaviour
             #region JUMP
             if (CanJump() && LastPressedJumpTime > 0) //jump
             {
-                Animator.SetTrigger("Jump");
                 IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
@@ -293,15 +306,6 @@ public class PlayerMovement : MonoBehaviour
                 _isJumpCut = false;
                 _isJumpFalling = false;
                 Jump();
-            }
-
-            else
-            {
-                if (MoveInput.x == 0)
-                    Animator.SetTrigger("Idle");
-
-                else
-                    Animator.SetTrigger("Walk");
             }
             #endregion JUMP
 
