@@ -480,18 +480,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Turn()
     {
+        IsFacingRight = !IsFacingRight;
         //Stores scale and flips the player with y rotation.
         if (IsFacingRight)
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 180.0f, transform.rotation.z);
+            Vector3 rotator = new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z);
             transform.rotation = Quaternion.Euler(rotator);
         }
         else
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 0.0f, transform.rotation.z);
+            Vector3 rotator = new Vector3(transform.rotation.eulerAngles.x, 180.0f, transform.rotation.eulerAngles.z);
             transform.rotation = Quaternion.Euler(rotator);
         }
-        IsFacingRight = !IsFacingRight;
         CameraCenter.CallTurn();
     }
 
