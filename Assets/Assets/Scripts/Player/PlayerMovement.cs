@@ -205,6 +205,20 @@ public class PlayerMovement : MonoBehaviour
             else
                 IsSliding = false;
             #endregion SLIDE CHECKS
+
+            if (IsJumping)
+                Animator.SetTrigger("Jump");
+
+            else if (MoveInput.x != 0)
+                Animator.SetTrigger("Walk");
+
+            else
+                Animator.SetTrigger("Idle");
+        }
+
+        else
+        {
+            Animator.SetTrigger("Hurtstop");
         }
 
         #region CAMERA CHECK
@@ -264,7 +278,6 @@ public class PlayerMovement : MonoBehaviour
             #region JUMP
             if (CanJump() && LastPressedJumpTime > 0) //jump
             {
-                Animator.SetTrigger("Jump");
                 IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
@@ -293,15 +306,6 @@ public class PlayerMovement : MonoBehaviour
                 _isJumpCut = false;
                 _isJumpFalling = false;
                 Jump();
-            }
-
-            else
-            {
-                if (MoveInput.x == 0)
-                    Animator.SetTrigger("Idle");
-
-                else
-                    Animator.SetTrigger("Walk");
             }
             #endregion JUMP
 
@@ -476,18 +480,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Turn()
     {
+        IsFacingRight = !IsFacingRight;
         //Stores scale and flips the player with y rotation.
         if (IsFacingRight)
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 180.0f, transform.rotation.z);
+            Vector3 rotator = new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z);
             transform.rotation = Quaternion.Euler(rotator);
         }
         else
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 0.0f, transform.rotation.z);
+            Vector3 rotator = new Vector3(transform.rotation.eulerAngles.x, 180.0f, transform.rotation.eulerAngles.z);
             transform.rotation = Quaternion.Euler(rotator);
         }
-        IsFacingRight = !IsFacingRight;
         CameraCenter.CallTurn();
     }
 
