@@ -168,7 +168,7 @@ public class starTree : MonoBehaviour
                     //print( random + "/" + attackType );
                       
                     if ( isAttacking == false ) {    
-                        int random = Random.Range(1,4); // 1~3
+                        int random = Random.Range(1,5); // 1~4
                         attackType = AttackType.waiting;    
                         
                         if ( random == 1 && throwing == false ) {
@@ -179,6 +179,11 @@ public class starTree : MonoBehaviour
                         }
                         else if ( random == 3 && digging == false ) {
                             attackType = AttackType.dig;
+                        }
+                        else if ( random == 4 && canDash == true ) {
+                            status = Status.dash;
+                            break;
+                            
                         }
                         checkAni();
                         
@@ -378,10 +383,13 @@ public class starTree : MonoBehaviour
                 //yield return new WaitForSeconds( 1f );
                 //changeState();
                 canChangeState = true;
+
+                yield return new WaitForSeconds( 2f );
+
                 isAttacking = false;
                 
 
-                yield return new WaitForSeconds( throwCooldown );
+                yield return new WaitForSeconds( throwCooldown - 1f );
                 throwing = false;
                 //isAttacking = false;
 
@@ -406,10 +414,12 @@ public class starTree : MonoBehaviour
                 //yield return new WaitForSeconds( 1f );
                 //changeState();
                 canChangeState = true;
+
+                yield return new WaitForSeconds( 2f );
                 isAttacking = false;
                 
                 
-                yield return new WaitForSeconds( spinCooldown );
+                yield return new WaitForSeconds( spinCooldown - 1f );
                 spinning = false;
                 //isAttacking = false;
                 
@@ -433,10 +443,13 @@ public class starTree : MonoBehaviour
                 //yield return new WaitForSeconds( 1f );
                 //changeState();
                 canChangeState = true; 
+
+                yield return new WaitForSeconds( 2f );
+
                 isAttacking = false;
                           
                 
-                yield return new WaitForSeconds( digCooldown );
+                yield return new WaitForSeconds( digCooldown - 1f );
                 digging = false;   
                 //isAttacking = false; 
 
