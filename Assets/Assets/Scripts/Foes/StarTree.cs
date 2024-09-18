@@ -8,8 +8,10 @@ public class StarTree : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public enum Status { idle, walk, dash, attack };
+    public enum Status { idle, walk, dash, attack, waiting };
     public Status status;
+
+    public Status lastStatus;
     public enum Facing { left, right };
     public Facing facing;
     public float speed;
@@ -33,7 +35,7 @@ public class StarTree : MonoBehaviour
 
     public bool canChangeState;
 
-    private enum AttackType { throwStar, spin, dig };
+    private enum AttackType { throwStar, spin, dig, waiting };
 
     private AttackType attackType;
     public bool isAttacking = false;
@@ -44,15 +46,15 @@ public class StarTree : MonoBehaviour
 
     public bool digging = false;
 
-    private float digCooldown = 3.0f;
+    private float digCooldown = 10.0f;
     private float throwAttackTime = 0.5f;
 
-    private float throwCooldown = 3f;
+    private float throwCooldown = 10f;
     private float throwPrepTime = 1.0f;
 
     private float spinAttackTime = 3.0f;
 
-    private float spinCooldown = 3f;
+    private float spinCooldown = 10f;
     
 
     Rigidbody2D rigid2D;
@@ -69,6 +71,7 @@ public class StarTree : MonoBehaviour
         canChangeState = true;
 
         status = Status.idle;
+        //changeState();
         if ( spr.flipX == false ) {
             facing = Facing.left;
         }
@@ -85,10 +88,13 @@ public class StarTree : MonoBehaviour
 
         if ( GameObject.FindWithTag("Player") != null ) {
             playerTrans = GameObject.FindWithTag("Player").transform;
-        }        
+        }   
+
+             
     }
 
     void Update() {
+        /*
         if ( Input.GetKeyDown( KeyCode.X ) ) {
             //Instantiate( bulletPrefab, new Vector2 ( this.transform.position.x - 5,this.transform.position.y ), Quaternion.identity );
             //throwAttack();
@@ -96,6 +102,7 @@ public class StarTree : MonoBehaviour
             status = Status.attack;
 >>>>>>> mob:Assets/Assets/Scripts/mobs/starTree.cs
         }
+        */
         /* dead
         else if ( Input.GetKeyDown( KeyCode.C ) ) {
 
@@ -108,7 +115,7 @@ public class StarTree : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        print(canChangeState + "/" + isAttacking );
+        //print(canChangeState + "/" + isAttacking );
         
         //float deltaTime = Time.deltaTime;
         //print( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) );
@@ -119,7 +126,7 @@ public class StarTree : MonoBehaviour
             
             case Status.idle: // start status -> stand
                 if ( canChangeState ) {
-
+                    lastStatus = Status.idle;
                     checkAni();
                     changeState();
                 }
@@ -127,7 +134,7 @@ public class StarTree : MonoBehaviour
                 break;
             case Status.walk: // walk status
                 if ( canChangeState ){
-
+                    lastStatus = Status.idle;
                     checkAni();
                     walking();
 
@@ -139,9 +146,11 @@ public class StarTree : MonoBehaviour
 
             case Status.dash:
                 if ( canChangeState ) {
-                    checkAni();
+                    
                     if ( canDash ) {
-                        print( "Execute");
+                        lastStatus = Status.dash;
+                        checkAni();
+                        //print( "Execute");
                         StartCoroutine( Dash() );
                     }
                     changeState();
@@ -151,6 +160,11 @@ public class StarTree : MonoBehaviour
                 break;
 
             case Status.attack:
+                
+                if ( attackType == AttackType.spin ) {
+                    walking();
+                }
+
                 if ( canChangeState ) {
                         
                     //set attackType
@@ -159,7 +173,8 @@ public class StarTree : MonoBehaviour
                     //print( random + "/" + attackType );
                       
                     if ( isAttacking == false ) {    
-                        int random = Random.Range(1,4); // 1~3
+                        int random = Random.Range(1,5); // 1~4
+                        attackType = AttackType.waiting;    
                         
                         if ( random == 1 && throwing == false ) {
                             attackType = AttackType.throwStar;
@@ -170,20 +185,39 @@ public class StarTree : MonoBehaviour
                         else if ( random == 3 && digging == false ) {
                             attackType = AttackType.dig;
                         }
-                        else {
-                            changeToStand();
+                        else if ( random == 4 && canDash == true ) {
+                            status = Status.dash;
                             break;
-                            ;// do normal attack
+                            
                         }
                         checkAni();
-                        StartCoroutine( Attack() );
                         
-                    }          
-                                              
+                        if ( attackType != AttackType.waiting ) {
+                            lastStatus = Status.attack;
+                            StartCoroutine( Attack() );
+                             
+                            
+                        }
+                        
+                    
+                    }
+                    changeState(); 
+                                                        
                 }
+                
+
+                break;
+
+            /*case Status.waiting:
+            print( "waiting" );
+                if ( attackType == AttackType.spin ) {
+                    walking();
+                }
+                lastStatus = Status.waiting;
                 changeState();
 
                 break;
+            */
 
         
         }
@@ -214,15 +248,16 @@ public class StarTree : MonoBehaviour
     }
 
     public void changeState() {
+
         if ( playerTrans && canChangeState ) {
             if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 80f  ) {
                 status = Status.idle;
                 
             }
 
-            else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 20f && isAttacking == false ) {
+            else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 20f && isAttacking == false /*&&
+                      lastStatus != Status.attack*/ ) {
                 status = Status.attack;
-                //attackType = AttackType.throwStar;
             }
 
             else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 80f && 
@@ -233,14 +268,15 @@ public class StarTree : MonoBehaviour
                 status = Status.walk;
             }
         }
-        else {
-            status = Status.idle;
+        else { // if it's attacking
+            status = Status.walk;
         }
     }
 
 
     void checkAni() {
         // 0:idle 1: walk 2:dash 3:attack
+        //print( lastStatus + " / " + status );
         if ( status == Status.idle ) {
             anime.SetInteger( "status", 0 );
             //print("0");
@@ -253,7 +289,7 @@ public class StarTree : MonoBehaviour
             anime.SetInteger( "status", 2 );
             //print("2");
         }
-        else if ( status == Status.attack ) {
+        else if ( status == Status.attack && lastStatus != Status.attack ) {
             if ( attackType == AttackType.throwStar )  {
                 anime.SetInteger( "status", 3 ); //prep
             }
@@ -263,12 +299,15 @@ public class StarTree : MonoBehaviour
             else if ( attackType == AttackType.dig ) {
                 anime.SetInteger( "status", 6 );
             }
+            else {
+                anime.SetInteger( "status", 0 ); 
+            }
             
             
         }
         else {
-            status = Status.walk;
-            anime.SetInteger( "status", 1 );  
+            anime.SetInteger( "status", 0 ); 
+             
         }
     }
 
@@ -346,21 +385,25 @@ public class StarTree : MonoBehaviour
                 yield return new WaitForSeconds( animationLength );
 
                 //changeToStand();
-                //yield return new WaitForSeconds( 2.0f );
+                //yield return new WaitForSeconds( 1f );
+                //changeState();
                 canChangeState = true;
-                //isAttacking = false;
-                
-                changeState();
-                yield return new WaitForSeconds( throwCooldown );
-                throwing = false;
+
+                yield return new WaitForSeconds( 2f );
+
                 isAttacking = false;
+                
+
+                yield return new WaitForSeconds( throwCooldown - 1f );
+                throwing = false;
+                //isAttacking = false;
 
             break;
             
 
             case AttackType.spin:
                 spinning = true;
-                walking();
+                //walking();
                 clips = anime.runtimeAnimatorController.animationClips;
                 clip = FindClipByName( clips, "starTreeSpin" );
                 if ( clip != null ) {
@@ -373,14 +416,17 @@ public class StarTree : MonoBehaviour
                 yield return new WaitForSeconds( animationLength );
 
                 //changeToStand();
-                //yield return new WaitForSeconds( 3.0f );
+                //yield return new WaitForSeconds( 1f );
+                //changeState();
                 canChangeState = true;
-                //isAttacking = false;
-                
-                changeState();
-                yield return new WaitForSeconds( spinCooldown );
-                spinning = false;
+
+                yield return new WaitForSeconds( 2f );
                 isAttacking = false;
+                
+                
+                yield return new WaitForSeconds( spinCooldown - 1f );
+                spinning = false;
+                //isAttacking = false;
                 
          
             break;
@@ -399,14 +445,18 @@ public class StarTree : MonoBehaviour
                 yield return new WaitForSeconds( animationLength );
 
                 //changeToStand();
-                //yield return new WaitForSeconds( 2.0f );
-                canChangeState = true;
-                //isAttacking = false;  
-                           
-                changeState();
-                yield return new WaitForSeconds( digCooldown );
+                //yield return new WaitForSeconds( 1f );
+                //changeState();
+                canChangeState = true; 
+
+                yield return new WaitForSeconds( 2f );
+
+                isAttacking = false;
+                          
+                
+                yield return new WaitForSeconds( digCooldown - 1f );
                 digging = false;   
-                isAttacking = false; 
+                //isAttacking = false; 
 
 
 
@@ -420,8 +470,8 @@ public class StarTree : MonoBehaviour
     }
 
     public void changeToStand() {
-        status = Status.walk;
-        anime.SetInteger( "status", 1 );
+        status = Status.idle;
+        anime.SetInteger( "status", 0 );
     }
 
     public void throwAttack() {
@@ -461,22 +511,6 @@ public class StarTree : MonoBehaviour
 
                 }
         }
-    }
-
-
-
-
-/*
-    void OnCollisionEnter2D( Collision2D coll ) {
-        print( coll.gameObject.tag ); 
-       
-    }
-    */
-
-    private IEnumerator destroyPrefab( GameObject item ) {
-        yield return new WaitForSeconds(5f);
-        Destroy(item);
-        
     }
 
     AnimationClip FindClipByName(AnimationClip[] clips, string name)
