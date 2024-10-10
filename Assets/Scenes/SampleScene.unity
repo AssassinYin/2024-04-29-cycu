@@ -347,10 +347,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: starTree
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7077491172943011907, guid: 97acf5ec9a9e32447a1253b0b5d61451, type: 3}
+      propertyPath: m_Mass
+      value: 50
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3816815383224360107, guid: 97acf5ec9a9e32447a1253b0b5d61451, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4173794656161852782, guid: 97acf5ec9a9e32447a1253b0b5d61451, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 596877689}
   m_SourcePrefab: {fileID: 100100000, guid: 97acf5ec9a9e32447a1253b0b5d61451, type: 3}
 --- !u!1001 &449122234
 PrefabInstance:
@@ -583,6 +591,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &596877682 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4173794656161852782, guid: 97acf5ec9a9e32447a1253b0b5d61451, type: 3}
+  m_PrefabInstance: {fileID: 399447853}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &596877689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596877682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334533ee2e79440439c096eb6763721f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 0}
+  isInvulnerable: 1
+  healthAmount: 100
+  invulnerableFrame: 0.2
 --- !u!1 &616247622
 GameObject:
   m_ObjectHideFlags: 0
