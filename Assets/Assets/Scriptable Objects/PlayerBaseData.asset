@@ -44,22 +44,22 @@ MonoBehaviour:
   coyoteTime: 0.2
   jumpInputBufferTime: 0.2
   dashAmount: 1
-  dashSpeed: 40
-  dashSleepTime: 2
-  dashAttackTime: 2
-  dashEndTime: 2
+  dashSpeed: 120
+  dashSleepTime: 0.1
+  dashAttackTime: 0.1
+  dashEndTime: 0.1
   dashEndSpeed: {x: 1, y: 1}
-  dashEndRunLerp: 0
+  dashEndRunLerp: 0.058
   dashRefillTime: 1
-  dashInputBufferTime: 0.2
-  doLimitedDashDir: 0
+  dashInputBufferTime: 0.249
+  doLimitedDashDir: 1
   defaultForce: 0
   upwardsForce: 0
-  attackReadyTime: 0.2
+  attackReadyTime: 0.1
   attackTime: 0.2
-  attackEndTime: 0.2
-  attackRefillTime: 0.2
-  attackInputBufferTime: 0.2
+  attackEndTime: 0.1
+  attackRefillTime: 1
+  attackInputBufferTime: 0.3
   blockReadyTime: 0.2
   blockPreciseTime: 0.2
   blockTime: 0.2

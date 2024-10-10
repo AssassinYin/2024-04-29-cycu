@@ -84,10 +84,6 @@ public class StarTree : MonoBehaviour
 
 
         Mytransform = this.transform;
-<<<<<<< HEAD:Assets/Assets/Scripts/Foes/StarTree.cs
-        if ( GameObject.Find("Player") != null ) {
-            playerTrans = GameObject.Find("Player").transform;
-=======
 
         if ( GameObject.FindWithTag("Player") != null ) {
             playerTrans = GameObject.FindWithTag("Player").transform;
@@ -97,26 +93,7 @@ public class StarTree : MonoBehaviour
     }
 
     void Update() {
-<<<<<<< HEAD:Assets/Assets/Scripts/Foes/StarTree.cs
-        /*
-        if ( Input.GetKeyDown( KeyCode.X ) ) {
-            //Instantiate( bulletPrefab, new Vector2 ( this.transform.position.x - 5,this.transform.position.y ), Quaternion.identity );
-            //throwAttack();
-            attackType = AttackType.throwStar;
-            status = Status.attack;
->>>>>>> mob:Assets/Assets/Scripts/mobs/starTree.cs
-        }
-        */
-        /* dead
-        else if ( Input.GetKeyDown( KeyCode.C ) ) {
 
-            attackType = AttackType.spin;
-            status = Status.attack;
-        }
-        */
-=======
-        
->>>>>>> mob:Assets/Assets/Scripts/mobs/starTree.cs
     }
 
     // Update is called once per frame

@@ -155,22 +155,13 @@ public class PlayerMovement : MonoBehaviour
         if (!EntityHealth.InInvulnerableFrame)
         {
             #region ACTIONS CHECKS
-            if (!IsBlocking && !IsAttacking && !_attackRefilling)
+            if (!IsAttacking && !_attackRefilling)
                 StartCoroutine(nameof(RefillAttack), 1);
 
             else if (!IsBlocking && !IsAttacking && !IsDashing && LastPressedAttackTime > 0)
             {
                 IsAttacking = true;
                 StartCoroutine(nameof(StartAttack));
-            }
-
-            if (!IsAttacking && !IsBlocking && !_blockRefilling)
-                StartCoroutine(nameof(RefillBlock), 1);
-
-            else if (!IsAttacking && !IsBlocking && !IsDashing && LastPressedBlockTime > 0 && LastOnGroundTime > 0)
-            {
-                IsBlocking = true;
-                StartCoroutine(nameof(StartBlock));
             }
 
             //Heal code insert here
@@ -206,19 +197,22 @@ public class PlayerMovement : MonoBehaviour
                 IsSliding = false;
             #endregion SLIDE CHECKS
 
-            if (IsJumping)
-                Animator.SetTrigger("Jump");
+            if (IsAttacking)
+                ChangeAnimation("Attack");
 
-            else if (MoveInput.x != 0)
-                Animator.SetTrigger("Walk");
+            else if (IsJumping)
+                ChangeAnimation("Jump");
+
+            else if (Rigidbody.velocity.x != 0.0f)
+                ChangeAnimation("Run");
 
             else
-                Animator.SetTrigger("Idle");
+                ChangeAnimation("Idle");
         }
 
         else
         {
-            Animator.SetTrigger("Hurtstop");
+            ChangeAnimation("Hurtstop");
         }
 
         #region CAMERA CHECK
@@ -233,6 +227,33 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion CAMERA CHECK
 
+    }
+
+    private string currentAnimation = "";
+    [SerializeField] private Animator anim;
+
+    private void ChangeAnimation(string target)
+    {
+        if (currentAnimation != target)
+        {
+            currentAnimation = target;
+            if (currentAnimation == "Attack")
+            {
+                anim.CrossFade(target, 0.1f);
+            }
+
+            else if (currentAnimation == "Idle")
+            {
+                anim.CrossFade(target, 0.1f);
+                Animator.CrossFade(target, 0.1f);
+            }
+
+            else
+            {
+                anim.CrossFade("Idle", 0.1f);
+                Animator.CrossFade(target, 0.1f);
+            }
+        }
     }
 
     private void FixedUpdate()

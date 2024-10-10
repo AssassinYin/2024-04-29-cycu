@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore;
 
-public class starBullet : MonoBehaviour
+public class StarBullet : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed = 100f;

@@ -10,11 +10,11 @@ public class starTreeAni : MonoBehaviour
 
     [SerializeField] private GameObject tree;
 
-    private starTree treeCon;
+    private StarTree treeCon;
     // Start is called before the first frame update
     void Start()
     {
-        treeCon = tree.GetComponent<starTree>(); 
+        treeCon = tree.GetComponent<StarTree>(); 
         animator = GetComponent<Animator>();
         if (animator == null)
         {
