@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3286823143662708731}
   - component: {fileID: 7077491172943011907}
   - component: {fileID: 307177972179029104}
+  - component: {fileID: 3816815383224360107}
   m_Layer: 0
   m_Name: starTree
   m_TagString: Foe
@@ -155,7 +156,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 17.33, y: 22.00362}
+    oldSize: {x: 6.7695312, y: 8.595164}
     newSize: {x: 17.33, y: 22.00362}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -304,6 +305,22 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3816815383224360107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4173794656161852782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d961096fba2d141a3556b4f7c1b07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 0}
+  isInvulnerable: 1
+  healthAmount: 100
+  invulnerableFrame: 0.2
 --- !u!1 &6553733736747470905
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334533ee2e79440439c096eb6763721f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 0}
   isInvulnerable: 1
   healthAmount: 100
   invulnerableFrame: 0.2

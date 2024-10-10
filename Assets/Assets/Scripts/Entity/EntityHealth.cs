@@ -34,7 +34,6 @@ public class EntityHealth : MonoBehaviour
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
         if (!_inInvulnerableFrame)
         {
-            _inInvulnerableFrame = true;
             _currentHealth -= amount;
             slider.value = _currentHealth;
 
@@ -57,6 +56,7 @@ public class EntityHealth : MonoBehaviour
     private IEnumerator StartInvulnerableFrame()
     {
         //wait for the amount of invulnerableFrame
+        _inInvulnerableFrame = true;
         yield return new WaitForSeconds(invulnerableFrame);
         //turn off the hit bool so the enemy can receive damage again
         _inInvulnerableFrame = false;
