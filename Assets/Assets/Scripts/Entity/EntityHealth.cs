@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EntityHealth : MonoBehaviour
 {
+    [SerializeField] private Slider slider;
     //if this GameObject should receive damage or not
     [SerializeField] private bool isInvulnerable = true;
     //total number of health points the GameObject should have
@@ -34,6 +36,7 @@ public class EntityHealth : MonoBehaviour
         {
             _inInvulnerableFrame = true;
             _currentHealth -= amount;
+            slider.value = _currentHealth;
 
             //vanish state
             if (_currentHealth <= 0 && !isInvulnerable)
