@@ -58,6 +58,11 @@ public class digBullet1 : MonoBehaviour
     }
 
     void OnTriggerEnter2D( Collider2D coll ) {
+        if ( coll.gameObject.tag == "Player") {
+            coll.GetComponent<EntityHealth>().ApplyDamage(10);
+        }
+
+
         if ( coll.gameObject.tag == "Foe" || coll.gameObject.tag == "Player" || coll.gameObject.tag == "deleteLine" ) {
             print("deleting");
             Destroy( this.gameObject ); 

@@ -8,17 +8,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1308296570401365599, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
+      propertyPath: m_Size.x
+      value: 39.979996
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308296570401365599, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
+      propertyPath: m_Size.y
+      value: 26.275915
+      objectReference: {fileID: 0}
     - target: {fileID: 1367738393286842287, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
       propertyPath: m_Name
       value: DigBullet1
       objectReference: {fileID: 0}
+    - target: {fileID: 3589312681856877926, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6097242287422197296, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -57.82381
+      value: -24.522491
       objectReference: {fileID: 0}
     - target: {fileID: 6097242287422197296, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.6252027
+      value: 15.811434
       objectReference: {fileID: 0}
     - target: {fileID: 6097242287422197296, guid: f4197b6ff2437d746b1db1232caaf5ce, type: 3}
       propertyPath: m_LocalPosition.z
