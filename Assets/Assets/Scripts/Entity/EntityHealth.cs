@@ -13,7 +13,7 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private float invulnerableFrame = .2f;
 
     private bool _inInvulnerableFrame;
-    private int _currentHealth;
+    [SerializeField] private int _currentHealth;
     private Rigidbody2D _rigidbody;
 
     public bool InInvulnerableFrame { get { return _inInvulnerableFrame; } }
