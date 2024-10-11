@@ -72,7 +72,7 @@ public class digBullet1 : MonoBehaviour
 
     private IEnumerator destroyPrefab() {
         yield return new WaitForSeconds(5f);
-        Destroy( this );
+        Destroy( this.gameObject );
     }
 
 

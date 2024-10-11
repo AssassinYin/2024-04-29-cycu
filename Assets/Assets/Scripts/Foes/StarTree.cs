@@ -69,6 +69,7 @@ public class StarTree : MonoBehaviour
 
     void Start()
     {
+
         rigid2D = this.gameObject.GetComponent<Rigidbody2D>();
         canChangeState = true;
 
@@ -250,7 +251,7 @@ public class StarTree : MonoBehaviour
             }
 
             else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 80f && 
-                    Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 0f ) {
+                    Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 20f ) {
                 status = Status.walk;
             }
             else {

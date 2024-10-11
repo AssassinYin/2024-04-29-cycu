@@ -57,12 +57,12 @@ public class StarBullet : MonoBehaviour
     }
 
      void OnTriggerEnter2D( Collider2D coll ) {
-        if ( coll.gameObject.tag == "Player") {
-            coll.GetComponent<PlayerHealth>().ApplyDamage(10);
-        }
 
-        if ( coll.gameObject.tag == "Foe" || coll.gameObject.tag == "Player" || coll.gameObject.tag == "deleteLine" ) {
-
+        if ( coll.gameObject.CompareTag("Foe") || coll.gameObject.CompareTag("Player") || coll.gameObject.CompareTag("deleteLine") ) {
+            if ( coll.gameObject.CompareTag("Player")) {
+                coll.GetComponent<PlayerHealth>().ApplyDamage(10);
+            }
+            
             Destroy( this.gameObject ); 
         }
        
