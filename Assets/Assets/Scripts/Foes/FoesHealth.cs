@@ -15,11 +15,11 @@ public class FoesHealth : EntityHealth
     {
         
     }
-/*
-    void  OnCollisionStay2D(Collision2D coll ) {
-        if ( coll.gameObject.tag == "Player") {
-            coll.gameObject.GetComponent<PlayerHealth>().ApplyDamage(10);
+
+    void  OnTriggerEnter2D(Collider2D coll ) {
+        if ( coll.CompareTag("Player")) {
+            coll.GetComponent<PlayerHealth>().ApplyDamage(10);
         }
     }
-*/
+
 }

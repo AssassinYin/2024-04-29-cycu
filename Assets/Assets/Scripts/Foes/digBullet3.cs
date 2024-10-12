@@ -57,11 +57,11 @@ public class digBullet3 : MonoBehaviour
     }
 
      void OnTriggerEnter2D( Collider2D coll ) {
-        if ( coll.gameObject.tag == "Player") {
+        if ( coll.CompareTag("Player")) {
             coll.GetComponent<EntityHealth>().ApplyDamage(10);
         }
 
-        if ( coll.gameObject.tag == "Foe" || coll.gameObject.tag == "Player" || coll.gameObject.tag == "deleteLine" ) {
+        if ( coll.CompareTag("Foe") || coll.CompareTag("Player") || coll.CompareTag("deleteLine") ) {
             Destroy( this.gameObject ); 
         }
        
