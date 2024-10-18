@@ -57,7 +57,7 @@ public class Attack : MonoBehaviour
     private void HandleCollision(FoesHealth obj)
     {
         _isCollided = true;
-        obj.ApplyDamage(0);
+        obj.ApplyDamage(10);
         obj.ApplyKnockback(Dir);
     }
 }

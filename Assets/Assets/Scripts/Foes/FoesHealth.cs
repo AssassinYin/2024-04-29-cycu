@@ -16,9 +16,9 @@ public class FoesHealth : EntityHealth
         
     }
 
-    void  OnTriggerEnter2D(Collider2D coll ) {
-        if ( coll.CompareTag("Player")) {
-            coll.GetComponent<PlayerHealth>().ApplyDamage(10);
+    void OnCollisionEnter2D(Collision2D coll ) {
+        if ( coll.gameObject.CompareTag("Player")) {
+            coll.gameObject.GetComponent<PlayerHealth>().ApplyDamage(10);
         }
     }
 
