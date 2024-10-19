@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ public class EntityHealth : MonoBehaviour
     //time before entity can receive damage again
     [SerializeField] private float invulnerableFrame = .2f;
 
-    private bool _inInvulnerableFrame;
+    [SerializeField] private bool _inInvulnerableFrame;
     [SerializeField] private int _currentHealth;
     private Rigidbody2D _rigidbody;
 
@@ -31,13 +32,17 @@ public class EntityHealth : MonoBehaviour
 
     public void ApplyDamage(int amount)
     {
+        
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
-        if (!_inInvulnerableFrame)
+        if (!_inInvulnerableFrame && !isInvulnerable )
         {
+           
             _currentHealth -= amount;
-            slider.value = _currentHealth;
+
+            //slider.value = _currentHealth;
 
             //vanish state
+            
             if (_currentHealth <= 0 && !isInvulnerable)
             {
                 _currentHealth = 0;
@@ -45,20 +50,42 @@ public class EntityHealth : MonoBehaviour
             }
             else
                 StartCoroutine(StartInvulnerableFrame());
+            
+            
+            //StartCoroutine(StartInvulnerableFrame());
         }
+
+
+
     }
 
+/*
+    public void Update() {
+        checkHP();
+    }
+
+
+    public void checkHP() {
+        if (_currentHealth <= 0 )
+        {
+            _currentHealth = 0;
+            gameObject.SetActive(false);
+        }
+    }
+*/
     public void ApplyKnockback(Vector2 dir)
     {
         _rigidbody.AddForce(-dir, ForceMode2D.Impulse);
     }
 
-    private IEnumerator StartInvulnerableFrame()
+    public IEnumerator StartInvulnerableFrame()
     {
         //wait for the amount of invulnerableFrame
+        isInvulnerable = true;
         _inInvulnerableFrame = true;
         yield return new WaitForSeconds(invulnerableFrame);
         //turn off the hit bool so the enemy can receive damage again
         _inInvulnerableFrame = false;
+        isInvulnerable = false;
     }
 }

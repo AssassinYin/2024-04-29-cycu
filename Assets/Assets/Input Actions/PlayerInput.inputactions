@@ -130,7 +130,7 @@
                 {
                     "name": "",
                     "id": "ba77094c-278b-4a29-aa1f-9f68cb7f3b39",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/#(K)",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -174,7 +174,7 @@
                 {
                     "name": "",
                     "id": "994521f0-9c43-4b17-bcb4-98ab52ab69cc",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/#(J)",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
