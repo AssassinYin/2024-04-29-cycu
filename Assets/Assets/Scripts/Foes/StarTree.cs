@@ -480,15 +480,15 @@ public class StarTree : MonoBehaviour
 
     public void digAttack() {
         if ( facing == Facing.left ) {
-            Instantiate( digPrefab1, new Vector2 ( this.transform.position.x - 5,this.transform.position.y-5 ), Quaternion.identity );
-            Instantiate( digPrefab2, new Vector2 ( this.transform.position.x - 5,this.transform.position.y-5 ), Quaternion.identity );
-            Instantiate( digPrefab3, new Vector2 ( this.transform.position.x - 5,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab1, new Vector2 ( this.transform.position.x - 10,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab2, new Vector2 ( this.transform.position.x - 10,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab3, new Vector2 ( this.transform.position.x - 10,this.transform.position.y-5 ), Quaternion.identity );
             
         }
         else if ( facing == Facing.right ) {
-            Instantiate( digPrefab1, new Vector2 ( this.transform.position.x + 5,this.transform.position.y-5 ), Quaternion.identity );
-            Instantiate( digPrefab2, new Vector2 ( this.transform.position.x + 5,this.transform.position.y-5 ), Quaternion.identity );
-            Instantiate( digPrefab3, new Vector2 ( this.transform.position.x + 5,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab1, new Vector2 ( this.transform.position.x + 10,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab2, new Vector2 ( this.transform.position.x + 10,this.transform.position.y-5 ), Quaternion.identity );
+            Instantiate( digPrefab3, new Vector2 ( this.transform.position.x + 10,this.transform.position.y-5 ), Quaternion.identity );
         }
 
     }

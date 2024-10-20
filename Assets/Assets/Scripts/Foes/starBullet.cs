@@ -6,7 +6,7 @@ using UnityEngine.TextCore;
 public class StarBullet : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float speed = 100f;
+    public float speed = 50f;
     Rigidbody2D rd;
 
     private SpriteRenderer starTreeSpr;
@@ -39,11 +39,11 @@ public class StarBullet : MonoBehaviour
     void setVertex() {
         if ( starTreeSpr.flipX == false ) {
             facingLeft = true;
-            rd.AddForce( new Vector2( -10f, rd.velocity.y ), ForceMode2D.Impulse );
+            rd.AddForce( new Vector2( -1 * speed, rd.velocity.y ), ForceMode2D.Impulse );
         }
         else {
             facingLeft = false;
-            rd.AddForce( new Vector2( 10f, rd.velocity.y ), ForceMode2D.Impulse );
+            rd.AddForce( new Vector2( speed, rd.velocity.y ), ForceMode2D.Impulse );
         }
     }
 

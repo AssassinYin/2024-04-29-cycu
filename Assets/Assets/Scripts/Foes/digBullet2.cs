@@ -61,7 +61,7 @@ public class digBullet2 : MonoBehaviour
             coll.GetComponent<EntityHealth>().ApplyDamage(10);
         }
 
-        if ( coll.CompareTag("Foe") || coll.CompareTag("Player") || coll.CompareTag("deleteLine") ) {
+        if ( /*coll.CompareTag("Foe") || coll.CompareTag("Player") ||*/ coll.CompareTag("deleteLine") ) {
             Destroy( this.gameObject ); 
         }
        

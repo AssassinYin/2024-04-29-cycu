@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class attack : MonoBehaviour
+public class menuButtons : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -16,10 +17,12 @@ public class attack : MonoBehaviour
         
     }
 
-    void  OnTriggerEnter2D(Collider2D coll ) {
-        if ( coll.gameObject.tag == "Player") {
-            coll.gameObject.GetComponent<PlayerHealth>().ApplyDamage(10);
-        }
+    // 1:menu 2:game
+    public void EnterGameScene() {
+        SceneManager.LoadScene(2);
     }
 
+    public void EndGame() {
+        Application.Quit();
+    }
 }

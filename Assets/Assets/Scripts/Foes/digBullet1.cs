@@ -63,7 +63,7 @@ public class digBullet1 : MonoBehaviour
         }
 
 
-        if ( coll.CompareTag("Foe") || coll.CompareTag("Player") || coll.CompareTag("deleteLine") ) {
+        if ( /*coll.CompareTag("Foe") || coll.CompareTag("Player") ||*/ coll.CompareTag("deleteLine") ) {
             //print("deleting");
             Destroy( this.gameObject ); 
         }
