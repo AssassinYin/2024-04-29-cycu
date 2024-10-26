@@ -208,6 +208,7 @@ MonoBehaviour:
   Transform: {fileID: 1311649753998566588}
   Pi: {fileID: 3563070302254484499, guid: b53dc074e73782c458f6bdd161e36701, type: 3}
   BoolFunc: {fileID: 3563070302254484499, guid: bca0bb9828143d7458ece40b51ea5b59, type: 3}
+  Bomb: {fileID: 3563070302254484499, guid: 57b16bdaa75d96c45881b8e4238a0596, type: 3}
   decidedTransform: {fileID: 6680878989668880332}
 --- !u!114 &4762339359698661532
 MonoBehaviour:

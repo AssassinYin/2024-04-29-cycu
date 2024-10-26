@@ -5,6 +5,7 @@ public class Cal : MonoBehaviour
     public Transform Transform;
     public GameObject Pi;
     public GameObject BoolFunc;
+    public GameObject Bomb;
     public Transform decidedTransform;
     private float timer, delay;
 
@@ -26,7 +27,7 @@ public class Cal : MonoBehaviour
             int action = Random.Range(0, 3);
 
             SelectAPoint();
-            
+            BulletPointerHell();
 
             // Execute the chosen action
             /*
@@ -67,6 +68,13 @@ public class Cal : MonoBehaviour
 
         // Return the new position with the random y-offset
         return new Vector3(originalPosition.x, originalPosition.y + randomYOffset, originalPosition.z);
+    }
+
+    public void BulletPointerHell()
+    {
+        GameObject bulletInstance = Instantiate(Bomb, decidedTransform.position, Quaternion.identity);
+        Pointer bulletComponent = bulletInstance.GetComponent<Pointer>();
+        bulletComponent.dir = new Vector2(-10, 4);
     }
 
     public void BulletFuncHell()

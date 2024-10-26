@@ -31,9 +31,8 @@ public class EntityHealth : MonoBehaviour
 
     public void ApplyDamage(int amount)
     {
-        
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
-        if (!_inInvulnerableFrame && !isInvulnerable )
+        if (!_inInvulnerableFrame && !isInvulnerable)
         {
            
             _currentHealth -= amount;
@@ -53,9 +52,6 @@ public class EntityHealth : MonoBehaviour
             
             //StartCoroutine(StartInvulnerableFrame());
         }
-
-
-
     }
 
 /*
