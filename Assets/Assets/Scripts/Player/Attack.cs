@@ -48,6 +48,7 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision);
         //if the GameObject colliding with has an EntityHealth script
         if (collision.GetComponent<FoesHealth>())
             //checks to see what force can be applied to the player when melee attacking

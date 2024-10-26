@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +42,7 @@ public class EntityHealth : MonoBehaviour
 
             //vanish state
             
-            if (_currentHealth <= 0 && !isInvulnerable)
+            if (_currentHealth <= 0)
             {
                 _currentHealth = 0;
                 gameObject.SetActive(false);
