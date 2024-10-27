@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class tipsBoard : MonoBehaviour
+public class levelIntro : MonoBehaviour
 {
 
     [SerializeField] GameObject player;
@@ -38,19 +38,4 @@ public class tipsBoard : MonoBehaviour
             
         }
     }
-
-    void OnTriggerExit2D( Collider2D coll ) {
-        if ( coll.CompareTag( "Player" ) ) {
-
-            if ( tips != null ) {
-                tips.SetActive(false);
-            }
-            else {
-                print("tips is empty!!");
-            }
-
-            
-        }
-    }
-
 }
