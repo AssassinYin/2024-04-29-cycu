@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,9 +31,8 @@ public class EntityHealth : MonoBehaviour
 
     public void ApplyDamage(int amount)
     {
-        
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
-        if (!_inInvulnerableFrame && !isInvulnerable )
+        if (!_inInvulnerableFrame && !isInvulnerable)
         {
            
             _currentHealth -= amount;
@@ -43,7 +41,7 @@ public class EntityHealth : MonoBehaviour
 
             //vanish state
             
-            if (_currentHealth <= 0 && !isInvulnerable)
+            if (_currentHealth <= 0)
             {
                 _currentHealth = 0;
                 gameObject.SetActive(false);
@@ -54,9 +52,6 @@ public class EntityHealth : MonoBehaviour
             
             //StartCoroutine(StartInvulnerableFrame());
         }
-
-
-
     }
 
 /*

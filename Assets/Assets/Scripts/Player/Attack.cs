@@ -25,6 +25,7 @@ public class Attack : MonoBehaviour
             _dir = (Mathf.Abs(_movement.MoveInput.x) > Mathf.Abs(_movement.MoveInput.y)) ?
                  (_movement.MoveInput.x > 0) ? Vector2.right : Vector2.left :
                  (_movement.MoveInput.y > 0) ? Vector2.up : Vector2.down;
+
             if (_movement.LastOnGroundTime > 0) {
                 transform.eulerAngles = (_dir.y == 0) ?
                     (_dir.x == 1) ? new Vector3(0.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 180.0f) :
@@ -48,6 +49,7 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision);
         //if the GameObject colliding with has an EntityHealth script
         if (collision.GetComponent<FoesHealth>())
             //checks to see what force can be applied to the player when melee attacking
