@@ -22,6 +22,8 @@ public class menuButtons : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
+
+
     public void EndGame() {
         Application.Quit();
     }

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class gameManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
-    [SerializeField] private GameObject starTree;
+    [SerializeField] private GameObject boss;
 
     [SerializeField] private GameObject stopMenu;
 
@@ -62,6 +62,13 @@ public class gameManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void EnterLevel1() {
+        SceneManager.LoadScene(2);
+    }
+    public void EnterLevel2() {
+        SceneManager.LoadScene(3);
+    }
+
     public void ResetScene() {
         SceneManager.LoadScene(2);
     }
@@ -73,7 +80,7 @@ public class gameManager : MonoBehaviour
             Defeat.SetActive(true);
             //defeat
         }
-        else if ( !starTree.activeSelf ) {
+        else if ( !boss.activeSelf ) {
             endMenu.SetActive(true);
             Victory.SetActive(true);
             //victory

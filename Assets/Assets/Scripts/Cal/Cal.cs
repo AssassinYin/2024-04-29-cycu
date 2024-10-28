@@ -30,7 +30,7 @@ public class Cal : MonoBehaviour
             BulletPointerHell();
 
             // Execute the chosen action
-            /*
+            
             switch (action)
             {
                 case 0:
@@ -45,7 +45,7 @@ public class Cal : MonoBehaviour
                     BulletPiHell();
                     break;
             }
-            */
+            
 
             // Reset the timer and set a new random delay for the next action
             timer = 0f;
@@ -81,30 +81,30 @@ public class Cal : MonoBehaviour
     {
         GameObject bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
         BoolFunc bulletComponent = bulletInstance.GetComponent<BoolFunc>();
-        bulletComponent.dir = new Vector2(-1, 0);
+        bulletComponent.dir = new Vector2(-10, 0);
 
         bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<BoolFunc>();
-        bulletComponent.dir = new Vector2(-1, 3);
+        bulletComponent.dir = new Vector2(-10, 3);
 
         bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<BoolFunc>();
-        bulletComponent.dir = new Vector2(-1, -3);
+        bulletComponent.dir = new Vector2(-10, -3);
     }
 
     public void BulletPiHell()
     {
         GameObject bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
         Pi bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-1, 0);
+        bulletComponent.dir = new Vector2(-10, 0);
 
         bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-1, 3);
+        bulletComponent.dir = new Vector2(-10, 3);
 
         bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-1, -3);
+        bulletComponent.dir = new Vector2(-10, -3);
 
         bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
@@ -112,6 +112,6 @@ public class Cal : MonoBehaviour
 
         bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-1, -7);
+        bulletComponent.dir = new Vector2(-10, -7);
     }
 }
