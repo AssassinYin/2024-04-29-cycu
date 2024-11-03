@@ -27,14 +27,12 @@ public class Cal : MonoBehaviour
             int action = Random.Range(0, 3);
 
             SelectAPoint();
-            BulletPointerHell();
-
             // Execute the chosen action
             
             switch (action)
             {
                 case 0:
-                    Debug.Log("Action 1 executed");
+                    BulletPointerHell();
                     break;
                 case 1:
                     Debug.Log("Action 2 executed");

@@ -29,13 +29,18 @@ public class EntityHealth : MonoBehaviour
         _currentHealth = healthAmount;
     }
 
-    public void ApplyDamage(int amount)
+    public virtual void ApplyDamage(int amount)
     {
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
         if (!_inInvulnerableFrame && !isInvulnerable)
         {
            
             _currentHealth -= amount;
+            
+            if (_currentHealth > healthAmount)
+            {
+                _currentHealth = healthAmount;
+            }
 
             //slider.value = _currentHealth;
 
