@@ -49,17 +49,18 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision);
         //if the GameObject colliding with has an EntityHealth script
         if (collision.GetComponent<FoesHealth>())
+        {
+            Debug.Log("FoesHealth component found on: " + collision.gameObject.name);
             //checks to see what force can be applied to the player when melee attacking
             HandleCollision(collision.GetComponent<FoesHealth>());
+        }
     }
 
     private void HandleCollision(FoesHealth obj)
     {
         _isCollided = true;
         obj.ApplyDamage(10);
-        obj.ApplyKnockback(Dir);
     }
 }
