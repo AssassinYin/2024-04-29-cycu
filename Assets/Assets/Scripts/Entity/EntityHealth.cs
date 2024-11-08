@@ -83,4 +83,8 @@ public class EntityHealth : MonoBehaviour
         _inInvulnerableFrame = false;
         isInvulnerable = false;
     }
+
+    public int getCurHP() {
+        return _currentHealth;
+    }
 }

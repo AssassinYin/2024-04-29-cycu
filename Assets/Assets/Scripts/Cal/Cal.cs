@@ -4,9 +4,18 @@ public class Cal : MonoBehaviour
 {
     public Transform Transform;
     public GameObject Pi;
+    public GameObject Pi1, Pi2, Pi3;
+    public GameObject Pi4, Pi5, Pi6;
+    public GameObject Pi9;
+    public GameObject PiDot;
     public GameObject BoolFunc;
+    public GameObject BoolFuncLB, BoolFuncMB, BoolFuncRB;
     public GameObject Bomb;
     public Transform decidedTransform;
+
+    public Transform decidedTransformUnder;
+    public Transform decidedTransformRight;
+    public Transform decidedTransformCenter;
     private float timer, delay;
 
     private void Awake()
@@ -27,7 +36,7 @@ public class Cal : MonoBehaviour
             int action = Random.Range(0, 3);
 
             SelectAPoint();
-            BulletPointerHell();
+            //BulletPointerHell();
 
             // Execute the chosen action
             
@@ -35,6 +44,7 @@ public class Cal : MonoBehaviour
             {
                 case 0:
                     Debug.Log("Action 1 executed");
+                    BulletPointerHell();
                     break;
                 case 1:
                     Debug.Log("Action 2 executed");
@@ -74,44 +84,88 @@ public class Cal : MonoBehaviour
     {
         GameObject bulletInstance = Instantiate(Bomb, decidedTransform.position, Quaternion.identity);
         Pointer bulletComponent = bulletInstance.GetComponent<Pointer>();
+        bulletComponent.dir = new Vector2(10, 4);
+
+        bulletInstance = Instantiate(Bomb, decidedTransformRight.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pointer>();
         bulletComponent.dir = new Vector2(-10, 4);
     }
 
     public void BulletFuncHell()
-    {
-        GameObject bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
+    {   //left
+        GameObject bulletInstance = Instantiate(BoolFunc, decidedTransformCenter.position, Quaternion.identity);
         BoolFunc bulletComponent = bulletInstance.GetComponent<BoolFunc>();
         bulletComponent.dir = new Vector2(-10, 0);
-
-        bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
+        
+        //bottom
+        bulletInstance = Instantiate(BoolFuncMB, decidedTransformCenter.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<BoolFunc>();
-        bulletComponent.dir = new Vector2(-10, 3);
-
-        bulletInstance = Instantiate(BoolFunc, decidedTransform.position, Quaternion.identity);
+        bulletComponent.dir = new Vector2(0, -10);
+        //left bottom
+        bulletInstance = Instantiate(BoolFuncLB, decidedTransformCenter.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<BoolFunc>();
-        bulletComponent.dir = new Vector2(-10, -3);
+        bulletComponent.dir = new Vector2(-5, -5);
+        //right bottom
+        bulletInstance = Instantiate(BoolFuncRB, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<BoolFunc>();
+        bulletComponent.dir = new Vector2(5, -5);      
+        //right
+        bulletInstance = Instantiate(BoolFunc, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<BoolFunc>();
+        bulletComponent.dir = new Vector2(10, 0);
+
     }
 
     public void BulletPiHell()
     {
-        GameObject bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
+
+        GameObject bulletInstance = Instantiate(Pi3, decidedTransformCenter.position, Quaternion.identity);
         Pi bulletComponent = bulletInstance.GetComponent<Pi>();
         bulletComponent.dir = new Vector2(-10, 0);
 
-        bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
-        bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-10, 3);
 
-        bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
+        bulletInstance = Instantiate(PiDot, decidedTransformCenter.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-10, -3);
+        bulletComponent.dir = new Vector2(-10, -6);
 
-        bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
+        bulletInstance = Instantiate(Pi1, decidedTransformCenter.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-1, 7);
+        bulletComponent.dir = new Vector2(-6, -10);
 
-        bulletInstance = Instantiate(Pi, decidedTransform.position, Quaternion.identity);
+        bulletInstance = Instantiate(Pi4, decidedTransformCenter.position, Quaternion.identity);
         bulletComponent = bulletInstance.GetComponent<Pi>();
-        bulletComponent.dir = new Vector2(-10, -7);
+        bulletComponent.dir = new Vector2(0, -10);
+
+        bulletInstance = Instantiate(Pi1, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(6, -10);
+
+        bulletInstance = Instantiate(Pi5, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(10, -6);
+
+        bulletInstance = Instantiate(Pi9, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(10, 0);
+
+        bulletInstance = Instantiate(Pi2, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(10, 6);
+
+        bulletInstance = Instantiate(Pi6, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(6, 10);
+
+        bulletInstance = Instantiate(Pi5, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(0, 10);
+
+        bulletInstance = Instantiate(Pi3, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(-6, 10);
+
+        bulletInstance = Instantiate(Pi5, decidedTransformCenter.position, Quaternion.identity);
+        bulletComponent = bulletInstance.GetComponent<Pi>();
+        bulletComponent.dir = new Vector2(-10, 6);
     }
 }
