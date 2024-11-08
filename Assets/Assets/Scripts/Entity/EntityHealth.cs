@@ -18,7 +18,7 @@ public class EntityHealth : MonoBehaviour
 
     public bool InInvulnerableFrame { get { return _inInvulnerableFrame; } }
 
-    private void Awake()
+    protected void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -29,13 +29,18 @@ public class EntityHealth : MonoBehaviour
         _currentHealth = healthAmount;
     }
 
-    public void ApplyDamage(int amount)
+    public virtual void ApplyDamage(int amount)
     {
         //First checks to see if the player is currently in an invulnerable state; if not it runs the following logic.
         if (!_inInvulnerableFrame && !isInvulnerable)
         {
            
             _currentHealth -= amount;
+            
+            if (_currentHealth > healthAmount)
+            {
+                _currentHealth = healthAmount;
+            }
 
             //slider.value = _currentHealth;
 
@@ -68,9 +73,9 @@ public class EntityHealth : MonoBehaviour
         }
     }
 */
-    public void ApplyKnockback(Vector2 dir)
+    public virtual void ApplyKnockback(Vector2 dir)
     {
-        _rigidbody.AddForce(-dir, ForceMode2D.Impulse);
+        _rigidbody.AddForce(dir, ForceMode2D.Impulse);
     }
 
     public IEnumerator StartInvulnerableFrame()
