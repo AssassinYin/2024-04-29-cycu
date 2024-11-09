@@ -41,14 +41,20 @@ public class VendingMachine : MonoBehaviour
                 case 0:
                     Debug.Log("Action 1 executed");
                     TossCan(NmlCan, isLeft);
+                    TossCan(NmlCan, isLeft);
+                    TossCan(NmlCan, isLeft);
                     break;
                 case 1:
                     Debug.Log("Action 2 executed");
                     TossCan(RegCan, isLeft);
+                    TossCan(DeathCan, isLeft);
+                    TossCan(NmlCan, isLeft);
                     break;
                 case 2:
                     Debug.Log("Action 3 executed");
                     TossCan(DeathCan, isLeft);
+                    TossCan(NmlCan, isLeft);
+                    TossCan(NmlCan, isLeft);
                     break;
             }
             

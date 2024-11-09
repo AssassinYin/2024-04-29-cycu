@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class menuButtons : MonoBehaviour
 {
     // Start is called before the first frame update
+    public GameObject selectLevel;
     void Start()
     {
         
@@ -19,9 +20,28 @@ public class menuButtons : MonoBehaviour
 
     // 1:menu 2:game
     public void EnterGameScene() {
-        SceneManager.LoadScene(2);
+        selectLevel.SetActive( true );
     }
 
+    public void CloseSelect() {
+        selectLevel.SetActive( false );
+    }
+
+    public void EnterLV1() {
+        CloseSelect();
+        SceneManager.LoadScene( 2 );
+    }
+
+    public void EnterLV2() {
+        CloseSelect();
+        SceneManager.LoadScene( 3 );
+        
+    }
+
+    public void EnterLV3() {
+        CloseSelect();
+        SceneManager.LoadScene( 4 );
+    }
 
 
     public void EndGame() {
