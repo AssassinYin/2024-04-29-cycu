@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class VendingMachine : MonoBehaviour
+public class practiceVM : MonoBehaviour
 {
     public Transform LeftTransform;
     public Transform LeftDecidedTransform;
@@ -30,7 +30,7 @@ public class VendingMachine : MonoBehaviour
         if (_timer >= _delay)
         {
             // Pick a random action (0, 1)
-            int action = Random.Range(0, 3);
+            int action = 1; //Random.Range(0, 3);
 
             SelectAPoint();
 
@@ -41,45 +41,16 @@ public class VendingMachine : MonoBehaviour
             switch (action)
             {
                 case 0:
-                    Debug.Log("Action 1 executed");
-                    numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(NmlCan, isLeft);
-                    }
-                    numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(NmlCan, isLeft);
-                    }
-                     numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(NmlCan, isLeft);
-                    }                  
+                    TossCan(DeathCan, isLeft);                
 
                     break;
                 case 1:
-                    Debug.Log("Action 2 executed");
-                    numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(NmlCan, isLeft);
-                    }
-                    numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(RegCan, isLeft);
-                    }
 
                     TossCan(DeathCan, isLeft);
                     
                     break;
                 case 2:
-                    Debug.Log("Action 3 executed");
-                    numOfCan = Random.Range( 1, 4 );
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(NmlCan, isLeft);
-                    }
-                    for ( int i = 0 ; i < numOfCan ; i++ ) {
-                        TossCan(DeathCan, isLeft);
-                    }
-
+                    TossCan(DeathCan, isLeft);
                     break;
             }
             

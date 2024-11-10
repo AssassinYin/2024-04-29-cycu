@@ -59,20 +59,7 @@ public class EntityHealth : MonoBehaviour
         }
     }
 
-/*
-    public void Update() {
-        checkHP();
-    }
 
-
-    public void checkHP() {
-        if (_currentHealth <= 0 )
-        {
-            _currentHealth = 0;
-            gameObject.SetActive(false);
-        }
-    }
-*/
     public virtual void ApplyKnockback(Vector2 dir)
     {
         _rigidbody.AddForce(dir, ForceMode2D.Impulse);
@@ -92,4 +79,26 @@ public class EntityHealth : MonoBehaviour
     public int getCurHP() {
         return _currentHealth;
     }
+
+    public virtual void ApplySPDamage( int amount ) {
+
+        _currentHealth -= amount;
+            
+        if (_currentHealth > healthAmount)
+        {
+            _currentHealth = healthAmount;
+        }
+
+        //slider.value = _currentHealth;
+
+        //vanish state
+            
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0;
+            gameObject.SetActive(false);
+        }
+
+    }
+    
 }

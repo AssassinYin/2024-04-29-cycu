@@ -29,7 +29,7 @@ public class RegenerateCan : Can
         else if (isReflected && collision.gameObject.GetComponent<FoesHealth>() != null)
         {
             EntityHealth eh = collision.gameObject.GetComponent<EntityHealth>();
-            eh.ApplyDamage(-10);
+            eh.ApplySPDamage(-10);
             Destroy(gameObject);
         }
     }
