@@ -69,6 +69,10 @@ public class gameManager : MonoBehaviour
         SceneManager.LoadScene(3);
     }
 
+    public void EnterLevel3() {
+        SceneManager.LoadScene(4);
+    }
+
     public void ResetScene() {
         SceneManager.LoadScene(2);
     }
@@ -78,6 +82,7 @@ public class gameManager : MonoBehaviour
         if ( !player.activeSelf ) {
             endMenu.SetActive(true);
             Defeat.SetActive(true);
+            
             //defeat
         }
         else if ( !boss.activeSelf ) {

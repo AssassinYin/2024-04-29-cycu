@@ -9,10 +9,15 @@ public class CollectManager : MonoBehaviour
 
     public int targetNum;
 
+    public GameObject Close;
+
+    public GameObject Open;
+
     [SerializeField] GameObject tpGate;
     void Start()
     {
-        
+        Close.SetActive( true );
+        Open.SetActive( false );
     }
 
     // Update is called once per frame
@@ -24,6 +29,8 @@ public class CollectManager : MonoBehaviour
     private void checkCount() {
         if ( countCollection == targetNum ) {
             tpGate.SetActive( true );
+            Close.SetActive( false );
+            Open.SetActive( true );
         }
     }
 
