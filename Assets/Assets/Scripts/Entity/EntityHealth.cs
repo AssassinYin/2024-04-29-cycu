@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +22,35 @@ public class EntityHealth : MonoBehaviour
     protected void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        if (slider != null)
+        {
+            slider.maxValue = healthAmount;
+            slider.value = healthAmount;
+        }
     }
 
     private void Start()
     {
         //sets the enemy to the max amount of health when the scene loads
         _currentHealth = healthAmount;
+    }
+
+    private void Update()
+    {
+        Vector3 playerTrans;
+        if (GameObject.FindWithTag("Player") != null)
+        {
+            playerTrans = GameObject.FindWithTag("Player").transform.position;
+
+            if (slider != null)
+            {
+                if (Vector3.Distance(playerTrans, transform.position) < 25)
+                    slider.gameObject.SetActive(true);
+
+                else
+                    slider.gameObject.SetActive(false);
+            }
+        }
     }
 
     public virtual void ApplyDamage(int amount)
@@ -42,7 +66,8 @@ public class EntityHealth : MonoBehaviour
                 _currentHealth = healthAmount;
             }
 
-            //slider.value = _currentHealth;
+            if (slider != null)
+                slider.value = _currentHealth;
 
             //vanish state
             
@@ -88,8 +113,6 @@ public class EntityHealth : MonoBehaviour
         {
             _currentHealth = healthAmount;
         }
-
-        //slider.value = _currentHealth;
 
         //vanish state
             
