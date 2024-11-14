@@ -18,7 +18,7 @@ public class menuButtons : MonoBehaviour
         
     }
 
-    // 1:menu 2:game
+    // 0:menu 1:game
     public void EnterGameScene() {
         selectLevel.SetActive( true );
     }
@@ -29,18 +29,18 @@ public class menuButtons : MonoBehaviour
 
     public void EnterLV1() {
         CloseSelect();
-        SceneManager.LoadScene( 2 );
+        SceneManager.LoadScene( 1 );
     }
 
     public void EnterLV2() {
         CloseSelect();
-        SceneManager.LoadScene( 3 );
+        SceneManager.LoadScene( 2 );
         
     }
 
     public void EnterLV3() {
         CloseSelect();
-        SceneManager.LoadScene( 4 );
+        SceneManager.LoadScene( 3 );
     }
 
 

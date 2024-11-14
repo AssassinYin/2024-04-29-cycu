@@ -114,6 +114,9 @@ public class EntityHealth : MonoBehaviour
             _currentHealth = healthAmount;
         }
 
+        if (slider != null)
+            slider.value = _currentHealth;
+
         //vanish state
             
         if (_currentHealth <= 0)

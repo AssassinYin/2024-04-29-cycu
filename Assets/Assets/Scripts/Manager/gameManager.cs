@@ -54,7 +54,7 @@ public class gameManager : MonoBehaviour
     }
 
     public void BacktoMenu() {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 
     public void ContinueGame() {
@@ -63,18 +63,18 @@ public class gameManager : MonoBehaviour
     }
 
     public void EnterLevel1() {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
     public void EnterLevel2() {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(2);
     }
 
     public void EnterLevel3() {
-        SceneManager.LoadScene(4);
+        SceneManager.LoadScene(3);
     }
 
     public void ResetScene() {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
 
 
