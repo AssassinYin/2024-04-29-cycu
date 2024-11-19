@@ -28,8 +28,11 @@ namespace Meryel.UnityCodeAssist.Editor.Logger
             _formatProvider = formatProvider;
         }
 
-        public void Emit(LogEvent logEvent)
+        public void Emit(LogEvent? logEvent)
         {
+            if (logEvent == null)
+                return;
+
             var message = logEvent.RenderMessage(_formatProvider);
 
             switch (logEvent.Level)
@@ -49,6 +52,10 @@ namespace Meryel.UnityCodeAssist.Editor.Logger
                 default:
                     break;
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 

@@ -1,5 +1,18 @@
 List of new features, bug fixes and improvements
 
+# Version 1.3.9
+* Hotfix for Unity sink
+
+# Version 1.3.8
+* Hotfix for Unity sink
+
+# Version 1.3.7
+* Bugfix for exporter/updater
+* Bugfix for logging options
+
+# Version 1.3.6
+* VSCode readme updated
+
 # Version 1.3.5
 * JSON library switched back to Newtonsoft.JSON
 * Rule xml files removed from Unity asset
