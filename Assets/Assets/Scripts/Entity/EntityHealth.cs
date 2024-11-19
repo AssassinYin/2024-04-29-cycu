@@ -1,25 +1,24 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EntityHealth : MonoBehaviour
 {
-    [SerializeField] private Slider slider;
+    [SerializeField] protected Slider slider;
     //if this GameObject should receive damage or not
-    [SerializeField] private bool isInvulnerable = true;
+    [SerializeField] protected bool isInvulnerable = true;
     //total number of health points the GameObject should have
-    [SerializeField] private int healthAmount = 100;
+    [SerializeField] protected int healthAmount = 100;
     //time before entity can receive damage again
-    [SerializeField] private float invulnerableFrame = .2f;
+    [SerializeField] protected float invulnerableFrame = .2f;
 
-    [SerializeField] private bool _inInvulnerableFrame;
-    [SerializeField] private int _currentHealth;
-    private Rigidbody2D _rigidbody;
+    [SerializeField] protected bool _inInvulnerableFrame;
+    [SerializeField] protected int _currentHealth;
+    protected Rigidbody2D _rigidbody;
 
     public bool InInvulnerableFrame { get { return _inInvulnerableFrame; } }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         if (slider != null)

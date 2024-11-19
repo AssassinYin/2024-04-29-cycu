@@ -7,7 +7,7 @@ public class Can : FoesHealth
     private BoxCollider2D bc;
     protected bool isReflected, isAddforce;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         rb = GetComponent<Rigidbody2D>();
