@@ -212,6 +212,12 @@ public class PlayerMovement : MonoBehaviour
 
         else
         {
+            IsDashing = false;
+            IsJumping = false;
+            IsSliding = false;
+            IsWallJumping = false;
+            _isJumpCut = false;
+            _isJumpFalling = false;
             ChangeAnimation("Hurtstop");
         }
 
@@ -264,100 +270,101 @@ public class PlayerMovement : MonoBehaviour
             CheckDirectionToFace(MoveInput.x > 0);
         #endregion TURN
 
-        #region DASH
-        if (CanDash() && LastPressedDashTime > 0)
-        {
-            //freeze game for split second. Adds juiciness and a bit of forgiveness over directional input.
-            Sleep(Data.dashSleepTime);
-
-            //if not direction pressed, dash forward.
-            if (MoveInput != Vector2.zero)
+        if (!EntityHealth.InInvulnerableFrame) {
+            #region DASH
+            if (CanDash() && LastPressedDashTime > 0)
             {
-                if (Data.doLimitedDashDir)
-                    _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
+                //freeze game for split second. Adds juiciness and a bit of forgiveness over directional input.
+                Sleep(Data.dashSleepTime);
+
+                //if not direction pressed, dash forward.
+                if (MoveInput != Vector2.zero)
+                {
+                    if (Data.doLimitedDashDir)
+                        _lastDashDir = (Mathf.Abs(MoveInput.x) < Mathf.Abs(MoveInput.y)) ? new Vector2(0, MoveInput.y) : new Vector2(MoveInput.x, 0);
+
+                    else
+                        _lastDashDir = MoveInput;
+                }
 
                 else
-                    _lastDashDir = MoveInput;
-            }
+                    _lastDashDir = IsFacingRight ? Vector2.right : Vector2.left;
 
-            else
-                _lastDashDir = IsFacingRight ? Vector2.right : Vector2.left;
-
-            IsDashing = true;
-            IsJumping = false;
-            IsWallJumping = false;
-            _isJumpCut = false;
-
-            StartCoroutine(nameof(StartDash), _lastDashDir);
-        }
-        #endregion DASH
-
-        #region MOVEMENT
-        //handle run
-        if (!IsDashing)
-        {
-            #region JUMP
-            if (CanJump() && LastPressedJumpTime > 0) //jump
-            {
-                IsJumping = true;
-                IsWallJumping = false;
-                _isJumpCut = false;
-                _isJumpFalling = false;
-                Jump();
-            }
-
-            else if (CanWallJump() && LastPressedJumpTime > 0) //wall jump
-            {
-                IsWallJumping = true;
+                IsDashing = true;
                 IsJumping = false;
-                _isJumpCut = false;
-                _isJumpFalling = false;
-
-                _wallJumpStartTime = Time.time;
-                _lastWallJumpDir = (LastOnWallRightTime > 0) ? -1 : 1;
-
-                WallJump(_lastWallJumpDir);
-            }
-
-            else if (currentExtraJump > 0 && LastPressedJumpTime > 0) //extra jump
-            {
-                currentExtraJump -= 1;
-                IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
-                _isJumpFalling = false;
-                Jump();
+
+                StartCoroutine(nameof(StartDash), _lastDashDir);
             }
-            #endregion JUMP
+            #endregion DASH
 
-            #region RUN
-            if (IsWallJumping)
-                Run(Data.wallJumpRunLerp);
-
-            else
-                Run(1);
-            #endregion RUN
-
-            #region ATTACK
-            if (Attack.IsCollided)
+            #region MOVEMENT
+            //handle run
+            if (!IsDashing)
             {
-                ApplyReactionForce(Attack.Dir); //!!!!!!!!!! must change in future, ReactionForce should only be apply once
-                Attack.IsCollided = false;
+                #region JUMP
+                if (CanJump() && LastPressedJumpTime > 0) //jump
+                {
+                    IsJumping = true;
+                    IsWallJumping = false;
+                    _isJumpCut = false;
+                    _isJumpFalling = false;
+                    Jump();
+                }
+
+                else if (CanWallJump() && LastPressedJumpTime > 0) //wall jump
+                {
+                    IsWallJumping = true;
+                    IsJumping = false;
+                    _isJumpCut = false;
+                    _isJumpFalling = false;
+
+                    _wallJumpStartTime = Time.time;
+                    _lastWallJumpDir = (LastOnWallRightTime > 0) ? -1 : 1;
+
+                    WallJump(_lastWallJumpDir);
+                }
+
+                else if (currentExtraJump > 0 && LastPressedJumpTime > 0) //extra jump
+                {
+                    currentExtraJump -= 1;
+                    IsJumping = true;
+                    IsWallJumping = false;
+                    _isJumpCut = false;
+                    _isJumpFalling = false;
+                    Jump();
+                }
+                #endregion JUMP
+
+                #region RUN
+                if (IsWallJumping)
+                    Run(Data.wallJumpRunLerp);
+
+                else
+                    Run(1);
+                #endregion RUN
+
+                #region ATTACK
+                if (Attack.IsCollided)
+                {
+                    ApplyReactionForce(Attack.Dir); //!!!!!!!!!! must change in future, ReactionForce should only be apply once
+                    Attack.IsCollided = false;
+                }
+                #endregion ATTACK
             }
-            #endregion ATTACK
+
+            //handle dash ending
+            else if (_isDashAttacking)
+                Run(Data.dashEndRunLerp);
+            #endregion MOVEMENT
+
+            #region SLIDE
+            //handle slide
+            if (IsSliding)
+                Slide();
+            #endregion SLIDE
         }
-
-        //handle dash ending
-        else if (_isDashAttacking)
-            Run(Data.dashEndRunLerp);
-        #endregion MOVEMENT
-
-        #region SLIDE
-        //handle slide
-        if (IsSliding)
-            Slide();
-        #endregion SLIDE
-
         #region GRAVITY
         if (!_isDashAttacking)
         {
