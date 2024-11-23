@@ -497,6 +497,22 @@ public class PlayerMovement : MonoBehaviour
 
         // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / Rigidbody.mass, Rigidbody.velocity.y);
         // Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second.
+
+        #region Handle Running Sound
+        // 當角色只有跑步時播放跑步音效
+        if (Mathf.Abs(MoveInput.x) > 0.01f && LastOnGroundTime > 0 && !IsJumping && !IsWallJumping && !IsAttacking && !IsBlocking)
+        {
+            if (!SoundManager.instance.IsRunningSoundPlaying()) // 如果跑步音效尚未播放
+            {
+                SoundManager.instance.PlayRunSound();
+            }
+        }
+        else
+        {
+            // 如果正在執行其他操作或停止跑步，則停止跑步音效
+            SoundManager.instance.StopRunSound();
+        }
+        #endregion
     }
 
     private void Turn()
@@ -538,6 +554,9 @@ public class PlayerMovement : MonoBehaviour
         //ensures can't call Jump multiple times from one press
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
+
+        //sound
+        SoundManager.instance.PlayJumpSound();
 
         Rumbler.RumblePulse(0.1f, 1f, 1f, 0.5f);
 
@@ -587,6 +606,9 @@ public class PlayerMovement : MonoBehaviour
         LastOnGroundTime = 0;
         LastPressedDashTime = 0;
 
+        //sound
+        SoundManager.instance.PlayDashSound();
+
         float startTime = Time.time;
 
         _dashesLeft--;
@@ -634,6 +656,11 @@ public class PlayerMovement : MonoBehaviour
         //ensures can't call attack multiple times from one press
         LastPressedAttackTime = 0;
         LastPressedJumpTime = 0;
+
+        //sound anime check
+        if (anim != null) anim.SetTrigger("Attack");
+        else Debug.LogError("Animator is missing on this GameObject!");
+        SoundManager.instance.PlayAttackSound();
 
         //attack ready phase
         float startTime = Time.time;
