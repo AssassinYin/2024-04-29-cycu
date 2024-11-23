@@ -2,8 +2,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum CharacterType
+{
+    Player,
+    Monster1,
+}
+
+
+
 public class EntityHealth : MonoBehaviour
 {
+    [SerializeField] private CharacterType characterType;
     [SerializeField] protected Slider slider;
     //if this GameObject should receive damage or not
     [SerializeField] protected bool isInvulnerable = true;
@@ -69,14 +78,18 @@ public class EntityHealth : MonoBehaviour
                 slider.value = _currentHealth;
 
             //vanish state
-            
+
             if (_currentHealth <= 0)
             {
                 _currentHealth = 0;
                 gameObject.SetActive(false);
             }
             else
+            {
+                // 播放角色受傷音效
+                SoundManager.instance.PlayHurtSound(characterType);
                 StartCoroutine(StartInvulnerableFrame());
+            } 
             
             
             //StartCoroutine(StartInvulnerableFrame());
@@ -104,10 +117,17 @@ public class EntityHealth : MonoBehaviour
         return _currentHealth;
     }
 
-    public virtual void ApplySPDamage( int amount ) {
+    private void TestHurtSound()
+    {
+        Debug.Log($"Testing hurt sound for {characterType}");
+        SoundManager.instance.PlayHurtSound(characterType);
+    }
+
+    public virtual void ApplySPDamage(int amount)
+    {
 
         _currentHealth -= amount;
-            
+
         if (_currentHealth > healthAmount)
         {
             _currentHealth = healthAmount;
@@ -117,11 +137,16 @@ public class EntityHealth : MonoBehaviour
             slider.value = _currentHealth;
 
         //vanish state
-            
+
         if (_currentHealth <= 0)
         {
             _currentHealth = 0;
             gameObject.SetActive(false);
+        }
+        else
+        {
+            // 播放角色受傷音效
+            SoundManager.instance.PlayHurtSound(characterType);
         }
 
     }
