@@ -352,7 +352,7 @@ public class StarTree : MonoBehaviour
             
             case AttackType.throwStar:
                 rigid2D.velocity = Vector2.zero;
-            
+                SoundManager.instance.startree_PlayAttackSound("prethrow");
                 throwing = true;
                 clips = anime.runtimeAnimatorController.animationClips;
                 clip = FindClipByName( clips, "throwPrep" );
@@ -387,6 +387,7 @@ public class StarTree : MonoBehaviour
             
 
             case AttackType.spin:
+                SoundManager.instance.startree_PlayAttackSound("spin");
                 spinning = true;
                 speed = 5f;
 
@@ -432,6 +433,7 @@ public class StarTree : MonoBehaviour
             break;
 
             case AttackType.dig:
+                SoundManager.instance.startree_PlayAttackSound("dig");
                 rigid2D.velocity = Vector2.zero;
                 digging = true;
 
