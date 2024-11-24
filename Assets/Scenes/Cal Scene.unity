@@ -978,6 +978,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi1
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: d2e118b649156584eb07d221263ba7f7, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi2
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 72e3be0bf18165b4291a37a119c4941b, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi3
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: e49ff7d10dfe127418d496b18971518e, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi4
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: fd2db4b44ba10f84dbd13f37dba750fd, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi5
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 48b9a979aec118c44809c88ea39a98eb, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi6
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 8e9f135bb441e6f4abf00f4fb044d5c6, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: Pi9
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: c847f7d98e600c54abc54c69ee26bea2, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: PiDot
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 3c9720034b5a8cd4d83055ad28afef46, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: BoolFuncLB
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 9bfe661a17da70543af2face8fd00e1a, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: BoolFuncMB
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: e3e43928b8e7a0f418da8e8f54306a2d, type: 3}
+    - target: {fileID: 8091228465630345822, guid: 2766ef3767572ca45923b7e901d70546, type: 3}
+      propertyPath: BoolFuncRB
+      value: 
+      objectReference: {fileID: 3563070302254484499, guid: 21267e066049267438d4dbaadd5c9871, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
