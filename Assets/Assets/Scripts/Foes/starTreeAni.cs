@@ -55,7 +55,17 @@ public class starTreeAni : MonoBehaviour
     public void dig() {
         treeCon.digAttack();
         animator.Play("starTreeStand");
- 
+        // 播放飛鏢音效
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.startree_PlayAttackSound("threestar");
+        }
+        else
+        {
+            Debug.LogWarning("SoundManager instance not found!");
+        }
+
+
     }
 
 

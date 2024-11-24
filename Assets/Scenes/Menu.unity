@@ -1549,13 +1549,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979a5efca2b73a8459db01ffc0475c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHurtSound: {fileID: 8300000, guid: ebfe92b4e45e3b945b9bb6c68d9a8db2, type: 3}
-  jumpSound: {fileID: 8300000, guid: a749c1d648ac35c4c9606902899abc55, type: 3}
-  attackSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
-  backgroundMusic: {fileID: 0}
-  dashSound: {fileID: 8300000, guid: 33881174b1de53d41a4119301f3d4384, type: 3}
-  runSound: {fileID: 8300000, guid: ed39fc0f7139f914cac5e45f6a7c52f1, type: 3}
-  monster1HurtSound: {fileID: 0}
+  player_jumpSound: {fileID: 8300000, guid: a749c1d648ac35c4c9606902899abc55, type: 3}
+  player_attackSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
+  player_backgroundMusic: {fileID: 0}
+  player_dashSound: {fileID: 8300000, guid: 33881174b1de53d41a4119301f3d4384, type: 3}
+  player_runSound: {fileID: 8300000, guid: ed39fc0f7139f914cac5e45f6a7c52f1, type: 3}
+  startree_throwStarSound: {fileID: 8300000, guid: 57d641122ea88f948a3f32f171ca2441, type: 3}
+  startree_spinSound: {fileID: 8300000, guid: 8592224a2730241438e1070e2aa9a678, type: 3}
+  startree_digSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
+  startree_dashSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
 --- !u!82 &450367374
 AudioSource:
   m_ObjectHideFlags: 0

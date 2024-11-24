@@ -28,6 +28,17 @@ public class StarBullet : MonoBehaviour
        starTreeSpr = starTree.GetComponent<SpriteRenderer>(); 
        setVertex();
 
+
+        // 播放飛鏢音效
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.startree_PlayAttackSound("throwStar");
+        }
+        else
+        {
+            Debug.LogWarning("SoundManager instance not found!");
+        }
+
     }
 
     // Update is called once per frame   

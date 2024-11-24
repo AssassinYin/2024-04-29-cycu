@@ -5,19 +5,23 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     [Header("Audio Clips")]
-    public AudioClip playerHurtSound;
-    public AudioClip jumpSound; // 跳躍音效
-    public AudioClip attackSound; // 攻擊音效
-    public AudioClip backgroundMusic; // 背景音樂
-    public AudioClip dashSound;    // 衝刺音效
-    public AudioClip runSound;  // 跑步音效
+    //玩家音效
+    public AudioClip player_jumpSound; // 跳躍音效
+    public AudioClip player_attackSound; // 攻擊音效
+    public AudioClip player_backgroundMusic; // 背景音樂
+    public AudioClip player_dashSound;    // 衝刺音效
+    public AudioClip player_runSound;  // 跑步音效
 
-    public AudioClip monster1HurtSound;
-
+    //星字怪音效
+    public AudioClip startree_prethrowSound;
+    public AudioClip startree_throwStarSound;
+    public AudioClip startree_spinSound;
+    public AudioClip startree_digSound;
+    public AudioClip startree_threestarSound;
+    public AudioClip startree_dashSound;
 
     private AudioSource audioSource;
     private AudioSource loopingAudioSource; // 用於循環播放音效（例如跑步）
-
 
     private void Awake()
     {
@@ -44,6 +48,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+ 
     /// <summary>
     /// 播放指定的音效
     /// </summary>
@@ -65,52 +70,52 @@ public class SoundManager : MonoBehaviour
         audioSource.PlayOneShot(clip);
     }
 
+    #region player sound
     /// <summary>
     /// 播放跳躍音效
     /// </summary>
-    public void PlayJumpSound()
+    public void player_PlayJumpSound()
     {
-        if (jumpSound == null)
+        if (player_jumpSound == null)
         {
             Debug.LogError("JumpSound AudioClip is not assigned in the Inspector!");
             return;
         }
-        PlaySound(jumpSound);
+        PlaySound(player_jumpSound);
     }
 
     /// <summary>
     /// 播放攻擊音效
     /// </summary>
-    public void PlayAttackSound()
+    public void player_PlayAttackSound()
     {
-        if (attackSound == null)
+        if (player_attackSound == null)
         {
             Debug.LogError("AttackSound AudioClip is not assigned in the Inspector!");
             return;
         }
-        PlaySound(attackSound);
+        PlaySound(player_attackSound);
     }
 
     /// <summary>
     /// 播放衝刺音效
     /// </summary>
-    public void PlayDashSound()
+    public void player_PlayDashSound()
     {
-        if (dashSound == null)
+        if (player_dashSound == null)
         {
             Debug.LogError("DashSound AudioClip is not assigned in the Inspector!");
             return;
         }
-        PlaySound(dashSound);
+        PlaySound(player_dashSound);
     }
-
 
     /// <summary>
     /// 播放跑步音效（循環）
     /// </summary>
-    public void PlayRunSound()
+    public void player_PlayRunSound()
     {
-        if (runSound == null)
+        if (player_runSound == null)
         {
             Debug.LogError("RunSound AudioClip is not assigned!");
             return;
@@ -118,7 +123,7 @@ public class SoundManager : MonoBehaviour
 
         if (!loopingAudioSource.isPlaying)
         {
-            loopingAudioSource.clip = runSound;
+            loopingAudioSource.clip = player_runSound;
             loopingAudioSource.Play();
         }
     }
@@ -126,7 +131,7 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// 停止跑步音效
     /// </summary>
-    public void StopRunSound()
+    public void player_StopRunSound()
     {
         if (loopingAudioSource.isPlaying)
         {
@@ -137,17 +142,55 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// 檢查是否正在播放跑步音效
     /// </summary>
-    public bool IsRunningSoundPlaying()
+    public bool player_IsRunningSoundPlaying()
     {
-        return loopingAudioSource.isPlaying && loopingAudioSource.clip == runSound;
+        return loopingAudioSource.isPlaying && loopingAudioSource.clip == player_runSound;
     }
+    #endregion
 
+    #region statree sound
+
+    public void startree_PlayAttackSound(string attackType)
+    {
+        AudioClip clip = null;
+
+        switch (attackType)
+        {
+            case "prethrow":
+                clip = startree_prethrowSound;
+                break;
+            case "throwStar":
+                clip = startree_throwStarSound;
+                break;
+            case "spin":
+                clip = startree_spinSound;
+                break;
+            case "dig":
+                clip = startree_digSound;
+                break;
+            case "threestar":
+                clip = startree_threestarSound;
+                break;
+            case "dash":
+                clip = startree_dashSound;
+                break;
+            default:
+                Debug.LogWarning($"No sound assigned for StarTree attack type: {attackType}");
+                break;
+        }
+
+        if (clip != null)
+        {
+            PlaySound(clip);
+        }
+    }
+    #endregion
     /// <summary>
     /// 播放背景音樂
     /// </summary>
-    public void PlayBackgroundMusic()
+    public void player_PlayBackgroundMusic()
     {
-        if (backgroundMusic == null)
+        if (player_backgroundMusic == null)
         {
             Debug.LogError("BackgroundMusic AudioClip is not assigned in the Inspector!");
             return;
@@ -159,7 +202,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        audioSource.clip = backgroundMusic;
+        audioSource.clip = player_backgroundMusic;
         audioSource.loop = true;
         audioSource.Play();
     }
@@ -167,7 +210,7 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// 停止背景音樂
     /// </summary>
-    public void StopBackgroundMusic()
+    public void player_StopBackgroundMusic()
     {
         if (audioSource == null)
         {
@@ -176,42 +219,5 @@ public class SoundManager : MonoBehaviour
         }
 
         audioSource.Stop();
-
-    }
-    public void PlayHurtSound(CharacterType characterType)
-    {
-        AudioClip clip = GetHurtSound(characterType); // 根據角色類型獲取對應的音效
-        if (clip != null)
-        {
-            PlaySound(clip); // 播放對應的音效
-        }
-        else
-        {
-            Debug.LogWarning($"No hurt sound assigned for {characterType}");
-        }
-    }
-
-    private AudioClip GetHurtSound(CharacterType characterType)
-    {
-        AudioClip clip = null;
-        switch (characterType)
-        {
-            case CharacterType.Player:
-                clip = playerHurtSound;
-                break;
-            case CharacterType.Monster1:
-                clip = monster1HurtSound;
-                break;
-            default:
-                Debug.LogWarning($"CharacterType {characterType} has no assigned hurt sound!");
-                break;
-        }
-
-        if (clip == null)
-        {
-            Debug.LogError($"No AudioClip assigned for {characterType} hurt sound.");
-        }
-
-        return clip;
     }
 }

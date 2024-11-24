@@ -509,15 +509,15 @@ public class PlayerMovement : MonoBehaviour
         // 當角色只有跑步時播放跑步音效
         if (Mathf.Abs(MoveInput.x) > 0.01f && LastOnGroundTime > 0 && !IsJumping && !IsWallJumping && !IsAttacking && !IsBlocking)
         {
-            if (!SoundManager.instance.IsRunningSoundPlaying()) // 如果跑步音效尚未播放
+            if (!SoundManager.instance.player_IsRunningSoundPlaying()) // 如果跑步音效尚未播放
             {
-                SoundManager.instance.PlayRunSound();
+                SoundManager.instance.player_PlayRunSound();
             }
         }
         else
         {
             // 如果正在執行其他操作或停止跑步，則停止跑步音效
-            SoundManager.instance.StopRunSound();
+            SoundManager.instance.player_StopRunSound();
         }
         #endregion
     }
@@ -563,7 +563,7 @@ public class PlayerMovement : MonoBehaviour
         LastOnGroundTime = 0;
 
         //sound
-        SoundManager.instance.PlayJumpSound();
+        SoundManager.instance.player_PlayJumpSound();
 
         Rumbler.RumblePulse(0.1f, 1f, 1f, 0.5f);
 
@@ -614,7 +614,7 @@ public class PlayerMovement : MonoBehaviour
         LastPressedDashTime = 0;
 
         //sound
-        SoundManager.instance.PlayDashSound();
+        SoundManager.instance.player_PlayDashSound();
 
         float startTime = Time.time;
 
@@ -667,7 +667,7 @@ public class PlayerMovement : MonoBehaviour
         //sound anime check
         if (anim != null) anim.SetTrigger("Attack");
         else Debug.LogError("Animator is missing on this GameObject!");
-        SoundManager.instance.PlayAttackSound();
+        SoundManager.instance.player_PlayAttackSound();
 
         //attack ready phase
         float startTime = Time.time;
