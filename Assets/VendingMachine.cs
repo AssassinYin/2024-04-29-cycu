@@ -42,6 +42,7 @@ public class VendingMachine : MonoBehaviour
             {
                 case 0:
                     Debug.Log("Action 1 executed");
+                    SoundManager.instance.PlayVendingMachineSound(1); // 播放音效模式 1
                     numOfCan = Random.Range( 1, 4 );
                     for ( int i = 0 ; i < numOfCan ; i++ ) {
                         TossCan(NmlCan, isLeft);
@@ -58,6 +59,7 @@ public class VendingMachine : MonoBehaviour
                     break;
                 case 1:
                     Debug.Log("Action 2 executed");
+                    SoundManager.instance.PlayVendingMachineSound(2); // 播放音效模式 2
                     numOfCan = Random.Range( 1, 4 );
                     for ( int i = 0 ; i < numOfCan ; i++ ) {
                         TossCan(NmlCan, isLeft);
@@ -72,6 +74,7 @@ public class VendingMachine : MonoBehaviour
                     break;
                 case 2:
                     Debug.Log("Action 3 executed");
+                    SoundManager.instance.PlayVendingMachineSound(3); // 播放音效模式 3
                     numOfCan = Random.Range( 1, 4 );
                     for ( int i = 0 ; i < numOfCan ; i++ ) {
                         TossCan(NmlCan, isLeft);
