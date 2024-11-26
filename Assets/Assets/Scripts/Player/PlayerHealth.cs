@@ -1,11 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHealth : EntityHealth
 {
     private bool _hurtStopTime = false;
     public bool HurtStopTime { get { return _hurtStopTime; } }
+
+    public PlayerMovement PlayerMovement { get; private set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        PlayerMovement = GetComponent<PlayerMovement>();
+    }
 
     public virtual IEnumerator StartHurtStopFrame()
     {
@@ -41,6 +48,7 @@ public class PlayerHealth : EntityHealth
             }
             else
             {
+                PlayerMovement.Sleep(0.2f);
                 StartCoroutine(StartInvulnerableFrame());
                 StartCoroutine(StartHurtStopFrame());
             }

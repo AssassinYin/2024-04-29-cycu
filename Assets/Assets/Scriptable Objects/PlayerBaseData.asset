@@ -34,7 +34,7 @@ MonoBehaviour:
   wallJumpForce: {x: 10, y: 40}
   wallJumpRunLerp: 0.075
   wallJumpTime: 0.3
-  doTurnOnWallJump: 0
+  doTurnOnWallJump: 1
   jumpCutGravityMult: 3.5
   jumpHangGravityMult: 1
   jumpHangTimeThreshold: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   jumpInputBufferTime: 0.2
   dashAmount: 1
   dashSpeed: 120
-  dashSleepTime: 0.1
-  dashAttackTime: 0.1
+  dashSleepTime: 0.2
+  dashAttackTime: 0.3
   dashEndTime: 0.1
   dashEndSpeed: {x: 1, y: 1}
   dashEndRunLerp: 0.058

@@ -447,7 +447,7 @@ public class PlayerMovement : MonoBehaviour
     #region GENERAL METHODS
     public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
 
-    private void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
+    public void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
 
     private IEnumerator PerformSleep(float duration)
     {
