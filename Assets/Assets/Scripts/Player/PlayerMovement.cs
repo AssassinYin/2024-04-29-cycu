@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D Rigidbody { get; private set; }
     public PlayerInput PlayerInput { get; private set; }
     public Animator Animator { get; private set; }
-    public EntityHealth EntityHealth { get; private set; }
+    public PlayerHealth PlayerHealth { get; private set; }
     #endregion COMPONENTS
 
     #region STATE PARAMETERS
@@ -97,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         Rumbler = GetComponent<Rumbler>();
         Rigidbody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        EntityHealth = GetComponent<EntityHealth>();
+        PlayerHealth = GetComponent<PlayerHealth>();
     }
 
     private void Start()
@@ -152,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion COLLISION CHECKS
 
-        if (!EntityHealth.InInvulnerableFrame)
+        if (!PlayerHealth.HurtStopTime)
         {
             #region ACTIONS CHECKS
             if (!IsAttacking && !_attackRefilling)
@@ -270,7 +270,7 @@ public class PlayerMovement : MonoBehaviour
             CheckDirectionToFace(MoveInput.x > 0);
         #endregion TURN
 
-        if (!EntityHealth.InInvulnerableFrame) {
+        if (!PlayerHealth.HurtStopTime) {
             #region DASH
             if (CanDash() && LastPressedDashTime > 0)
             {
