@@ -85,6 +85,8 @@ public class Pointer : MonoBehaviour
             {
                 EntityHealth eh = collision.gameObject.GetComponent<EntityHealth>();
                 eh.ApplyDamage(10);
+                // ¼·©ñÃz¬µ­µ®Ä
+                SoundManager.instance.PlayCalBulletExplosionSound();
                 ChangeAnimation("Death");
                 Destroy(gameObject, 0.3f);
             }

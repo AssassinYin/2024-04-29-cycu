@@ -1563,6 +1563,7 @@ MonoBehaviour:
   cal_bulletPointerHellSound: {fileID: 8300000, guid: 58569e8f56bdd9a42bfe76859a26ed77, type: 3}
   cal_bulletFuncHellSound: {fileID: 8300000, guid: 35c5bfba0cf911f4194f8584a1bd9c41, type: 3}
   cal_bulletPiHellSound: {fileID: 8300000, guid: f56f8828f8add9a4aa1611f8ba9cd5c6, type: 3}
+  cal_bulletExplosionSound: {fileID: 8300000, guid: 0ec4a692b5a112942a0423985314ec77, type: 3}
   vendingMachineMode1Sound: {fileID: 8300000, guid: ce0b9061903911643ab9497220fbe743, type: 3}
   vendingMachineMode2Sound: {fileID: 8300000, guid: 51a00a5cff0b8634d9a688c385f40225, type: 3}
   vendingMachineMode3Sound: {fileID: 8300000, guid: 49c084b6a000a644d846d438c9633299, type: 3}

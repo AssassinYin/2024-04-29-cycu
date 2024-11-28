@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip cal_bulletPointerHellSound; // 音效1
     public AudioClip cal_bulletFuncHellSound;    // 音效2
     public AudioClip cal_bulletPiHellSound;      // 音效3
+    public AudioClip cal_bulletExplosionSound;   // 爆炸音效
 
     //飲料機音效
     public AudioClip vendingMachineMode1Sound;
@@ -231,6 +232,18 @@ public class SoundManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Cal BulletPiHell sound is not assigned.");
+        }
+    }
+
+    public void PlayCalBulletExplosionSound()
+    {
+        if (cal_bulletExplosionSound != null)
+        {
+            audioSource.PlayOneShot(cal_bulletExplosionSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cal BulletExplosion sound is not assigned.");
         }
     }
     #endregion
