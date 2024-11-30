@@ -103,7 +103,7 @@ public class StarTree : MonoBehaviour
         //print(canChangeState + "/" + isAttacking );
         
         //float deltaTime = Time.deltaTime;
-        //print( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) );
+        //print( Mathf.Abs( Mytransform.position.y - playerTrans.position.y ) );
         //print( rigid2D.velocity );
         //print( dashCD );
         /*
@@ -241,17 +241,20 @@ public class StarTree : MonoBehaviour
     public void changeState() {
 
         if ( playerTrans && canChangeState ) {
-            if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 80f  ) {
+            if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 80f && 
+                Mathf.Abs( Mytransform.position.y - playerTrans.position.y ) >= 60f  ) {
                 status = Status.idle;
                 
             }
 
-            else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 20f && isAttacking == false ) {
+            else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 20f && isAttacking == false &&
+                    Mathf.Abs( Mytransform.position.y - playerTrans.position.y ) < 60f ) {
                 status = Status.attack;
             }
 
             else if ( Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) <= 80f && 
-                    Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 20f ) {
+                    Mathf.Abs( Mytransform.position.x - playerTrans.position.x ) > 20f &&
+                    Mathf.Abs( Mytransform.position.y - playerTrans.position.y ) < 60f ) {
                 status = Status.walk;
             }
             else {

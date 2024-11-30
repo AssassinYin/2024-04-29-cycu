@@ -49,7 +49,7 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if the GameObject colliding with has an EntityHealth script
+        //if the GameObject colliding with has an PlayerHealth script
         if (collision.GetComponent<FoesHealth>())
         {
             Debug.Log("FoesHealth component found on: " + collision.gameObject.name);

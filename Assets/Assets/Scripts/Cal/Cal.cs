@@ -82,6 +82,10 @@ public class Cal : MonoBehaviour
 
     public void BulletPointerHell()
     {
+
+        // 撥放音效
+        SoundManager.instance.PlayCalBulletPointerHellSound();
+
         GameObject bulletInstance = Instantiate(Bomb, decidedTransform.position, Quaternion.identity);
         Pointer bulletComponent = bulletInstance.GetComponent<Pointer>();
         bulletComponent.dir = new Vector2(10, 4);
@@ -92,7 +96,11 @@ public class Cal : MonoBehaviour
     }
 
     public void BulletFuncHell()
-    {   //left
+    {
+        // 撥放音效
+        SoundManager.instance.PlayCalBulletFuncHellSound();
+
+        //left
         GameObject bulletInstance = Instantiate(BoolFunc, decidedTransformCenter.position, Quaternion.identity);
         BoolFunc bulletComponent = bulletInstance.GetComponent<BoolFunc>();
         bulletComponent.dir = new Vector2(-10, 0);
@@ -118,6 +126,8 @@ public class Cal : MonoBehaviour
 
     public void BulletPiHell()
     {
+        // 撥放音效
+        SoundManager.instance.PlayCalBulletPiHellSound();
 
         GameObject bulletInstance = Instantiate(Pi3, decidedTransformCenter.position, Quaternion.identity);
         Pi bulletComponent = bulletInstance.GetComponent<Pi>();

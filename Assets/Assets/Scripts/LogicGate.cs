@@ -28,30 +28,30 @@ public class LogicGate: EntityHealth
         Cable.OpenCable();
     }
 
-    private void DamagingState()
-    {
-        switch (Gate.AnimName)
-        {
-            case GateType.And:
-                if (Switch1.AnimName && Switch2.AnimName)
-                    ;
-                break;
-            case GateType.Or:
-                if (Switch1.AnimName || Switch2.AnimName)
-                    ;
-                break;
-            case GateType.Nand:
-                if (!(Switch1.AnimName && Switch2.AnimName))
-                    ;
-                break;
-            case GateType.Nor:
-                if (Switch1.AnimName ^ Switch2.AnimName)
-                    ;
-                break;
-            case GateType.Xnor:
-                if (!(Switch1.AnimName ^ Switch2.AnimName))
-                    ;
-                break;
-        }
-    }
+    //private void DamagingState()
+    //{
+    //    switch (Gate.AnimName)
+    //    {
+    //        case GateType.And:
+    //            if (Switch1.AnimName && Switch2.AnimName)
+    //                ;
+    //            break;
+    //        case GateType.Or:
+    //            if (Switch1.AnimName || Switch2.AnimName)
+    //                ;
+    //            break;
+    //        case GateType.Nand:
+    //            if (!(Switch1.AnimName && Switch2.AnimName))
+    //                ;
+    //            break;
+    //        case GateType.Nor:
+    //            if (Switch1.AnimName ^ Switch2.AnimName)
+    //                ;
+    //            break;
+    //        case GateType.Xnor:
+    //            if (!(Switch1.AnimName ^ Switch2.AnimName))
+    //                ;
+    //            break;
+    //    }
+    //}
 }

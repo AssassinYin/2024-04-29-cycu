@@ -20,6 +20,18 @@ public class SoundManager : MonoBehaviour
     public AudioClip startree_threestarSound;
     public AudioClip startree_dashSound;
 
+    //cal音效
+    public AudioClip cal_bulletPointerHellSound; // 音效1
+    public AudioClip cal_bulletFuncHellSound;    // 音效2
+    public AudioClip cal_bulletPiHellSound;      // 音效3
+    public AudioClip cal_bulletExplosionSound;   // 爆炸音效
+
+    //飲料機音效
+    public AudioClip vendingMachineMode1Sound;
+    public AudioClip vendingMachineMode2Sound;
+    public AudioClip vendingMachineMode3Sound;
+
+
     private AudioSource audioSource;
     private AudioSource loopingAudioSource; // 用於循環播放音效（例如跑步）
 
@@ -185,6 +197,86 @@ public class SoundManager : MonoBehaviour
         }
     }
     #endregion
+
+    #region cal sound
+    public void PlayCalBulletPointerHellSound()
+    {
+        if (cal_bulletPointerHellSound != null)
+        {
+            audioSource.PlayOneShot(cal_bulletPointerHellSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cal BulletPointerHell sound is not assigned.");
+        }
+    }
+
+    public void PlayCalBulletFuncHellSound()
+    {
+        if (cal_bulletFuncHellSound != null)
+        {
+            audioSource.PlayOneShot(cal_bulletFuncHellSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cal BulletFuncHell sound is not assigned.");
+        }
+    }
+
+    public void PlayCalBulletPiHellSound()
+    {
+        if (cal_bulletPiHellSound != null)
+        {
+            audioSource.PlayOneShot(cal_bulletPiHellSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cal BulletPiHell sound is not assigned.");
+        }
+    }
+
+    public void PlayCalBulletExplosionSound()
+    {
+        if (cal_bulletExplosionSound != null)
+        {
+            audioSource.PlayOneShot(cal_bulletExplosionSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cal BulletExplosion sound is not assigned.");
+        }
+    }
+    #endregion
+
+    #region vending machine
+    public void PlayVendingMachineSound(int mode)
+    {
+        AudioClip clip = null;
+
+        switch (mode)
+        {
+            case 1:
+                clip = vendingMachineMode1Sound;
+                break;
+            case 2:
+                clip = vendingMachineMode2Sound;
+                break;
+            case 3:
+                clip = vendingMachineMode3Sound;
+                break;
+            default:
+                Debug.LogWarning("Invalid vending machine mode.");
+                break;
+        }
+
+        if (clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+    #endregion
+
+
     /// <summary>
     /// 播放背景音樂
     /// </summary>

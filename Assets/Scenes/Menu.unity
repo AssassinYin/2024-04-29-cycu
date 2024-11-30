@@ -1554,10 +1554,19 @@ MonoBehaviour:
   player_backgroundMusic: {fileID: 0}
   player_dashSound: {fileID: 8300000, guid: 33881174b1de53d41a4119301f3d4384, type: 3}
   player_runSound: {fileID: 8300000, guid: ed39fc0f7139f914cac5e45f6a7c52f1, type: 3}
+  startree_prethrowSound: {fileID: 8300000, guid: 5510051c1aba2f64e8518e31b9475ad8, type: 3}
   startree_throwStarSound: {fileID: 8300000, guid: 57d641122ea88f948a3f32f171ca2441, type: 3}
   startree_spinSound: {fileID: 8300000, guid: 8592224a2730241438e1070e2aa9a678, type: 3}
-  startree_digSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
+  startree_digSound: {fileID: 8300000, guid: 2e24ce7496ac839408caefb0f6ec79bd, type: 3}
+  startree_threestarSound: {fileID: 8300000, guid: 23f142b45507a324aa6c49a4907a98df, type: 3}
   startree_dashSound: {fileID: 8300000, guid: c5f90baa4272f684db9518e2725c272a, type: 3}
+  cal_bulletPointerHellSound: {fileID: 8300000, guid: 58569e8f56bdd9a42bfe76859a26ed77, type: 3}
+  cal_bulletFuncHellSound: {fileID: 8300000, guid: 35c5bfba0cf911f4194f8584a1bd9c41, type: 3}
+  cal_bulletPiHellSound: {fileID: 8300000, guid: f56f8828f8add9a4aa1611f8ba9cd5c6, type: 3}
+  cal_bulletExplosionSound: {fileID: 8300000, guid: 0ec4a692b5a112942a0423985314ec77, type: 3}
+  vendingMachineMode1Sound: {fileID: 8300000, guid: ce0b9061903911643ab9497220fbe743, type: 3}
+  vendingMachineMode2Sound: {fileID: 8300000, guid: 51a00a5cff0b8634d9a688c385f40225, type: 3}
+  vendingMachineMode3Sound: {fileID: 8300000, guid: 49c084b6a000a644d846d438c9633299, type: 3}
 --- !u!82 &450367374
 AudioSource:
   m_ObjectHideFlags: 0
