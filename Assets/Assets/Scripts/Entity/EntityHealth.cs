@@ -81,10 +81,7 @@ public class EntityHealth : MonoBehaviour
             else
             {
                 StartCoroutine(StartInvulnerableFrame());
-            } 
-            
-            
-            //StartCoroutine(StartInvulnerableFrame());
+            }
         }
     }
 
@@ -94,7 +91,7 @@ public class EntityHealth : MonoBehaviour
         _rigidbody.AddForce(dir, ForceMode2D.Impulse);
     }
 
-    public IEnumerator StartInvulnerableFrame()
+    public virtual IEnumerator StartInvulnerableFrame()
     {
         //wait for the amount of invulnerableFrame
         isInvulnerable = true;
