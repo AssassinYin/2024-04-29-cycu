@@ -16,12 +16,18 @@ public class Cal : MonoBehaviour
     public Transform decidedTransformUnder;
     public Transform decidedTransformRight;
     public Transform decidedTransformCenter;
+
+    public Transform playerTrans;
     private float timer, delay;
 
     private void Awake()
     {
         timer = 0f;
         delay = Random.Range(1f, 4f);
+        
+        if ( GameObject.FindWithTag("Player") != null ) {
+            playerTrans = GameObject.FindWithTag("Player").transform;
+        }   
     }
 
     private void Update()
@@ -30,7 +36,9 @@ public class Cal : MonoBehaviour
         timer += Time.deltaTime;
 
         // Check if it's time to execute an action
-        if (timer >= delay)
+        if (timer >= delay && 
+            Mathf.Abs( this.transform.position.x - playerTrans.position.x ) < 80f && 
+            Mathf.Abs( this.transform.position.y - playerTrans.position.y ) <= 60f )
         {
             // Pick a random action (0, 1, or 2)
             int action = Random.Range(0, 3);
@@ -83,7 +91,7 @@ public class Cal : MonoBehaviour
     public void BulletPointerHell()
     {
 
-        // ¼·©ñ­µ®Ä
+        // ï¿½ï¿½ï¿½ñ­µ®ï¿½
         SoundManager.instance.PlayCalBulletPointerHellSound();
 
         GameObject bulletInstance = Instantiate(Bomb, decidedTransform.position, Quaternion.identity);
@@ -97,7 +105,7 @@ public class Cal : MonoBehaviour
 
     public void BulletFuncHell()
     {
-        // ¼·©ñ­µ®Ä
+        // ï¿½ï¿½ï¿½ñ­µ®ï¿½
         SoundManager.instance.PlayCalBulletFuncHellSound();
 
         //left
@@ -126,7 +134,7 @@ public class Cal : MonoBehaviour
 
     public void BulletPiHell()
     {
-        // ¼·©ñ­µ®Ä
+        // ï¿½ï¿½ï¿½ñ­µ®ï¿½
         SoundManager.instance.PlayCalBulletPiHellSound();
 
         GameObject bulletInstance = Instantiate(Pi3, decidedTransformCenter.position, Quaternion.identity);
