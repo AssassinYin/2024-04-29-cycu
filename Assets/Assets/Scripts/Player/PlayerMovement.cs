@@ -163,7 +163,6 @@ public class PlayerMovement : MonoBehaviour
                 IsAttacking = true;
                 StartCoroutine(nameof(StartAttack));
             }
-
             //Heal code insert here
             #endregion ACTIONS CHECKS
 
@@ -197,7 +196,10 @@ public class PlayerMovement : MonoBehaviour
                 IsSliding = false;
             #endregion SLIDE CHECKS
 
-            if (IsAttacking)
+            if (IsDashing)
+                ChangeAnimation("Dash");
+
+            else if(IsAttacking)
                 ChangeAnimation("Attack");
 
             else if (IsJumping)
@@ -218,6 +220,7 @@ public class PlayerMovement : MonoBehaviour
             IsWallJumping = false;
             _isJumpCut = false;
             _isJumpFalling = false;
+            StopCoroutine(StartDash(Vector2.zero));
             ChangeAnimation("Hurtstop");
         }
 
@@ -246,6 +249,7 @@ public class PlayerMovement : MonoBehaviour
             if (currentAnimation == "Attack")
             {
                 anim.CrossFade(target, 0.1f);
+                Animator.CrossFade(target, 0.1f);
             }
 
             else if (currentAnimation == "Idle")
@@ -664,9 +668,6 @@ public class PlayerMovement : MonoBehaviour
         LastPressedAttackTime = 0;
         LastPressedJumpTime = 0;
 
-        //sound anime check
-        if (anim != null) anim.SetTrigger("Attack");
-        else Debug.LogError("Animator is missing on this GameObject!");
         SoundManager.instance.player_PlayAttackSound();
 
         //attack ready phase

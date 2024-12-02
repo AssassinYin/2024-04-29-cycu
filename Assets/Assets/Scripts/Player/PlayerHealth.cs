@@ -5,6 +5,8 @@ public class PlayerHealth : EntityHealth
 {
     private bool _hurtStopTime = false;
     public bool HurtStopTime { get { return _hurtStopTime; } }
+    //ª±®a­µ®Ä
+    public AudioClip clip;
 
     public PlayerMovement PlayerMovement { get; private set; }
 
@@ -39,7 +41,7 @@ public class PlayerHealth : EntityHealth
             if (slider != null)
                 slider.value = _currentHealth;
 
-            //vanish state
+            SoundManager.instance.PlaySound(clip);
 
             if (_currentHealth <= 0)
             {
