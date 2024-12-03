@@ -451,9 +451,10 @@ public class PlayerMovement : MonoBehaviour
     #region GENERAL METHODS
     public void SetGravityScale(float scale) => Rigidbody.gravityScale = scale;
 
-    public void Sleep(float duration) => StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
+    public void Sleep(float duration) =>
+        StartCoroutine(nameof(PerformSleep), duration); //method used to call StartCoroutine
 
-    private IEnumerator PerformSleep(float duration)
+    public IEnumerator PerformSleep(float duration)
     {
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(duration); //must be Realtime since timeScale is 0

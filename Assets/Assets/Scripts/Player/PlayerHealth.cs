@@ -50,7 +50,7 @@ public class PlayerHealth : EntityHealth
             }
             else
             {
-                PlayerMovement.Sleep(0.2f);
+                PlayerMovement.Sleep(0.5f);
                 StartCoroutine(StartInvulnerableFrame());
                 StartCoroutine(StartHurtStopFrame());
             }
