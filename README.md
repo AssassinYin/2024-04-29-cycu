@@ -196,7 +196,7 @@ Presenter基於玩家位置的距離決定敵人是否應轉變為走路或攻�
 
 # 肆、 結果與討論
 
-參見[DEMO VIDEO](DEMO VIDEO.mp4)
+參見 [./DEMO VIDEO](DEMO VIDEO.mp4)
 
 # 伍、 結論
 
